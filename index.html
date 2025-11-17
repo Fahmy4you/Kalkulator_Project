@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Sederhana</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Kalkulator Sederhana</h1>
+        <div class="fiture">
+            <div class="fiture-item" id="modecolor">
+                <div id="dark">
+                    <i class="bi bi-moon-stars-fill"></i>
+                    <span>Dark Mode</span>
+                </div>
+                <div id="light">
+                    <i class="bi bi-brightness-high-fill"></i>
+                    <span>Light Mode</span>
+                </div>
+            </div>
+            <div class="fiture-item" id="riwayat">
+                <i class="bi bi-stopwatch-fill"></i>
+                <span>Riwayat</span>
+            </div>
+        </div>
+    </div>
+    <div class="text">
+        <input type="text" id="calc-input" autofocus autocomplete="off" />
+        <!-- <span></span> -->
+    </div>
+    <div class="output">
+        <input type="text" value="0" disabled>
+    </div>
+    <div class="input">
+        <button class="input-item second-toggle">2nd</button>
+        <button class="input-item operator">(</button>
+        <button class="input-item operator">)</button>
+        <button class="input-item operator">10ˣ</button>
+        <button class="input-item" disabled>mc</button>
+        <button class="input-item" disabled>m+</button>
+        <button class="input-item" disabled>m-</button>
+        <button class="input-item" disabled>mr</button>
+        <button class="input-item operator">1/x</button>
+        <button class="input-item operator">x²</button>
+        <button class="input-item operator">x³</button>
+        <button class="input-item operator">yˣ</button>
+        <button class="input-item hapus-semua">AC</button>
+        <button class="input-item hapus-satu"><i class="bi bi-arrow-left"></i></button>
+        <button class="input-item balik">+/-</button>
+        <button class="input-item operator blue-text">÷</button>
+        <button class="input-item operator">x!</button>
+        <button class="input-item operator">2√(y)</button>
+        <button class="input-item operator">x√(y)</button>
+        <button class="input-item" disabled>lg</button>
+        <button class="input-item angka">7</button>
+        <button class="input-item angka">8</button>
+        <button class="input-item angka">9</button>
+        <button class="input-item operator blue-text">×</button>
+        <button class="input-item operator second">sin</button>
+        <button class="input-item operator second">cos</button>
+        <button class="input-item operator second">tan</button>
+        <button class="input-item" disabled>ln</button>
+        <button class="input-item angka">4</button>
+        <button class="input-item angka">5</button>
+        <button class="input-item angka">6</button>
+        <button class="input-item operator blue-text">-</button>
+        <button class="input-item operator second">sinh</button>
+        <button class="input-item operator second">cosh</button>
+        <button class="input-item operator second">tanh</button>
+        <button class="input-item operator">eˣ</button>
+        <button class="input-item angka">1</button>
+        <button class="input-item angka">2</button>
+        <button class="input-item angka">3</button>
+        <button class="input-item operator blue-text">+</button>
+        <button class="input-item" disabled>Rad</button>
+        <button class="input-item operator">π</button>
+        <button class="input-item" disabled>EE</button>
+        <button class="input-item operator">Rand</button>
+        <button class="input-item operator">%</button>
+        <button class="input-item angka">0</button>
+        <button class="input-item operator">,</button>
+        <button class="input-item operator blue-text">=</button>
+    </div>
+
+    <div class="bg-blur"></div>
+    <div id="riwayat_content">
+        <div class="riwayat-header">
+            <div class="title">
+                <h2>Riwayat Perhitungan</h2>
+                <button id="close_riwayat"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <p>Perhitungan akan direkam diriwayat ketika anda menekan sama dengan (=) dan mengganti text content dengan hasil</p>
+            <div class="container_fiture">
+                <button id="hapus_all_riwayat"><i class="bi bi-trash-fill"></i> Hapus Semua</button>
+            </div>
+        </div>
+        <div class="riwayat-body">
+            <ul id="list_riwayat">
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="mode.js"></script>
+    <script src="riwayat.js"></script>
+</body>
+</html>
