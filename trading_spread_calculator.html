@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Trading - Full Auto Save State</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    </style>
+</head>
+<body>
+
+    <div id="themeWrapper" class="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center p-4 md:p-8 transition-colors duration-300">
+
+        <div id="cardApp" class="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-full md:max-w-4xl transition-colors duration-300">
+            
+            <div id="headerApp" class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                <h2 id="titleApp" class="text-xl md:text-2xl font-bold text-blue-600">Trading RR & Spread Calculator</h2>
+                
+                <button onclick="toggleDarkMode()" id="btnTheme" class="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 cursor-pointer transition-all text-sm font-semibold flex items-center gap-1">
+                    <span id="themeIcon">🌙</span> <span id="themeText" class="hidden sm:inline">Dark</span>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                
+                <div class="space-y-4">
+                    <div>
+                        <label id="lblType" class="block text-sm font-semibold text-gray-700 mb-1">Tipe Posisi</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" id="btnBuy" onclick="setDirection('BUY')" class="py-2.5 rounded-lg font-bold text-center border-2 border-gray-300 text-gray-700 hover:bg-gray-100 cursor-pointer transition-all">BUY</button>
+                            <button type="button" id="btnSell" onclick="setDirection('SELL')" class="py-2.5 rounded-lg font-bold text-center border-2 border-red-500 bg-red-500 text-white cursor-pointer transition-all">SELL</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label id="lblEntry" class="block text-sm font-medium text-gray-700">Harga Entry (Base)</label>
+                        <input type="number" id="entryPrice" step="any" value="4531.00" oninput="saveAndCalculate()" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-mono">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label id="lblSL" class="block text-sm font-medium text-gray-700">Stoploss (Pips)</label>
+                            <input type="number" id="stoplossPips" value="40" oninput="saveAndCalculate()" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <p class="text-xs text-gray-400 mt-1" id="slPointInfo">*400 Points</p>
+                        </div>
+                        <div>
+                            <label id="lblSpread" class="block text-sm font-medium text-gray-700">Spread (Points)</label>
+                            <input type="number" id="spreadPoints" value="40" oninput="saveAndCalculate()" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <p class="text-xs text-gray-400 mt-1">*40 point = 4 pips</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label id="lblDecimal" class="block text-sm font-medium text-gray-700">Jumlah Angka Belakang Koma (Digit/Decimal)</label>
+                        <select id="decimalPlaces" onchange="saveAndCalculate()" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm cursor-pointer">
+                            <option value="0">0 (Contoh: 4531)</option>
+                            <option value="1">1 (Contoh: 4531.0)</option>
+                            <option value="2" selected>2 (Contoh: 4531.00) - Sesuai Kasus</option>
+                            <option value="3">3 (Contoh: 1950.123)</option>
+                            <option value="4">4 (Contoh: 1.1234)</option>
+                            <option value="5">5 (Contoh: 1.12345)</option>
+                        </select>
+                    </div>
+
+                    <button onclick="calculate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg cursor-pointer transition-all shadow-md mt-2">
+                        Hitung Target Posisi
+                    </button>
+                </div>
+
+                <div class="space-y-3 flex flex-col justify-center">
+                    <div id="boxEntry" class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+                        <span id="lblResEntry" class="text-sm font-semibold text-gray-600">ENTRY :</span>
+                        <span id="outEntry" class="font-mono font-bold text-gray-800 text-base md:text-lg">-</span>
+                    </div>
+                    <div id="boxSL" class="flex justify-between items-center p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                        <span class="text-sm font-semibold text-red-700">STOPLOSS :</span>
+                        <span id="outSL" class="font-mono font-bold text-red-700 text-base md:text-lg">-</span>
+                    </div>
+                    <div id="boxTP1" class="flex justify-between items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <span class="text-sm font-semibold text-green-700">TP 1 (1:1) :</span>
+                        <span id="outTP1" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                    </div>
+                    <div id="boxTP2" class="flex justify-between items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <span class="text-sm font-semibold text-green-700">TP 2 (1:2) :</span>
+                        <span id="outTP2" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                    </div>
+                    <div id="boxTP3" class="flex justify-between items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <span class="text-sm font-semibold text-green-700">TP 3 (1:3) :</span>
+                        <span id="outTP3" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentDirection = 'SELL';
+        let isDark = false;
+
+        // 1. TEMA HANDLER
+        function applyTheme(darkModeActive) {
+            isDark = darkModeActive;
+            const wrapper = document.getElementById('themeWrapper');
+            const card = document.getElementById('cardApp');
+            const header = document.getElementById('headerApp');
+            const title = document.getElementById('titleApp');
+            const btnTheme = document.getElementById('btnTheme');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            const inputs = [document.getElementById('entryPrice'), document.getElementById('stoplossPips'), document.getElementById('spreadPoints'), document.getElementById('decimalPlaces')];
+            const labels = [document.getElementById('lblType'), document.getElementById('lblEntry'), document.getElementById('lblSL'), document.getElementById('lblSpread'), document.getElementById('lblDecimal')];
+            const boxEntry = document.getElementById('boxEntry');
+            const lblResEntry = document.getElementById('lblResEntry');
+
+            if (isDark) {
+                themeIcon.innerText = '☀️'; themeText.innerText = 'Light';
+                wrapper.className = "bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4 md:p-8 transition-colors duration-300";
+                card.className = "bg-gray-800 p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-full md:max-w-4xl transition-colors duration-300";
+                title.className = "text-xl md:text-2xl font-bold text-blue-400";
+                btnTheme.className = "p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-200 cursor-pointer transition-all text-sm font-semibold flex items-center gap-1";
+                inputs.forEach(el => el.className = "mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-mono");
+                labels.forEach(el => el.className = "block text-sm font-medium text-gray-300");
+                document.getElementById('lblType').className = "block text-sm font-semibold text-gray-300 mb-1";
+                boxEntry.className = "flex justify-between items-center p-3 bg-gray-700/50 rounded-lg border-l-4 border-blue-500";
+                lblResEntry.className = "text-sm font-semibold text-gray-400";
+                document.getElementById('outEntry').className = "font-mono font-bold text-white text-base md:text-lg";
+                document.getElementById('boxSL').className = "flex justify-between items-center p-3 bg-red-950/40 rounded-lg border-l-4 border-red-500";
+                document.getElementById('outSL').className = "font-mono font-bold text-red-400 text-base md:text-lg";
+                ['boxTP1', 'boxTP2', 'boxTP3'].forEach(id => document.getElementById(id).className = "flex justify-between items-center p-3 bg-green-950/40 rounded-lg border-l-4 border-green-500");
+                ['outTP1', 'outTP2', 'outTP3'].forEach(id => document.getElementById(id).className = "font-mono font-bold text-green-400 text-base md:text-lg");
+            } else {
+                themeIcon.innerText = '🌙'; themeText.innerText = 'Dark';
+                wrapper.className = "bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center p-4 md:p-8 transition-colors duration-300";
+                card.className = "bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-full md:max-w-4xl transition-colors duration-300";
+                title.className = "text-xl md:text-2xl font-bold text-blue-600";
+                btnTheme.className = "p-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 cursor-pointer transition-all text-sm font-semibold flex items-center gap-1";
+                inputs.forEach(el => el.className = "mt-1 block w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-mono");
+                labels.forEach(el => el.className = "block text-sm font-medium text-gray-700");
+                document.getElementById('lblType').className = "block text-sm font-semibold text-gray-700 mb-1";
+                boxEntry.className = "flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-blue-500";
+                lblResEntry.className = "text-sm font-semibold text-gray-600";
+                document.getElementById('outEntry').className = "font-mono font-bold text-gray-800 text-base md:text-lg";
+                document.getElementById('boxSL').className = "flex justify-between items-center p-3 bg-red-50 rounded-lg border-l-4 border-red-500";
+                document.getElementById('outSL').className = "font-mono font-bold text-red-700 text-base md:text-lg";
+                ['boxTP1', 'boxTP2', 'boxTP3'].forEach(id => document.getElementById(id).className = "flex justify-between items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500");
+                ['outTP1', 'outTP2', 'outTP3'].forEach(id => document.getElementById(id).className = "font-mono font-bold text-green-700 text-base md:text-lg");
+            }
+            setDirection(currentDirection, false); // Sinkronkan ulang button, bypass saving loop
+        }
+
+        function toggleDarkMode() {
+            const nextState = !isDark;
+            applyTheme(nextState);
+            localStorage.setItem('trading_theme', nextState ? 'dark' : 'light');
+        }
+
+        // 2. FUNGSI AUTO SAVE DATA INPUTAN & POSISI
+        function saveAndCalculate() {
+            // Simpan value inputan terbaru ke LocalStorage
+            localStorage.setItem('tr_entryPrice', document.getElementById('entryPrice').value);
+            localStorage.setItem('tr_stoplossPips', document.getElementById('stoplossPips').value);
+            localStorage.setItem('tr_spreadPoints', document.getElementById('spreadPoints').value);
+            localStorage.setItem('tr_decimalPlaces', document.getElementById('decimalPlaces').value);
+            localStorage.setItem('tr_direction', currentDirection);
+
+            // Update keterangan pips text info secara real-time
+            const pips = parseFloat(document.getElementById('stoplossPips').value) || 0;
+            document.getElementById('slPointInfo').innerText = `*${pips * 10} Points`;
+
+            calculate();
+        }
+
+        function setDirection(direction, triggerSave = true) {
+            currentDirection = direction;
+            const btnBuy = document.getElementById('btnBuy');
+            const btnSell = document.getElementById('btnSell');
+
+            if (direction === 'BUY') {
+                btnBuy.className = "py-2.5 rounded-lg font-bold text-center border-2 border-green-500 bg-green-500 text-white cursor-pointer transition-all";
+                btnSell.className = `py-2.5 rounded-lg font-bold text-center border-2 ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-100'} cursor-pointer transition-all`;
+            } else {
+                btnSell.className = "py-2.5 rounded-lg font-bold text-center border-2 border-red-500 bg-red-500 text-white cursor-pointer transition-all";
+                btnBuy.className = `py-2.5 rounded-lg font-bold text-center border-2 ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-100'} cursor-pointer transition-all`;
+            }
+            
+            if (triggerSave) {
+                saveAndCalculate();
+            } else {
+                calculate();
+            }
+        }
+
+        // 3. AMBIL DATA DARI STORAGE SAAT HALAMAN DI-LOAD (RESTORE STATE)
+        function loadSavedState() {
+            // Restore Tema
+            const savedTheme = localStorage.getItem('trading_theme');
+            if (savedTheme !== null) {
+                applyTheme(savedTheme === 'dark');
+            } else {
+                applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
+            }
+
+            // Restore Nilai Form Input (Jika ada di storage)
+            if (localStorage.getItem('tr_entryPrice') !== null) document.getElementById('entryPrice').value = localStorage.getItem('tr_entryPrice');
+            if (localStorage.getItem('tr_stoplossPips') !== null) document.getElementById('stoplossPips').value = localStorage.getItem('tr_stoplossPips');
+            if (localStorage.getItem('tr_spreadPoints') !== null) document.getElementById('spreadPoints').value = localStorage.getItem('tr_spreadPoints');
+            if (localStorage.getItem('tr_decimalPlaces') !== null) document.getElementById('decimalPlaces').value = localStorage.getItem('tr_decimalPlaces');
+            
+            // Restore Tipe Arah Posisi
+            const savedDirection = localStorage.getItem('tr_direction');
+            if (savedDirection !== null) {
+                setDirection(savedDirection, false);
+            } else {
+                setDirection('SELL', false); // Default ikut studi kasus awal
+            }
+        }
+
+        // 4. LOGIKA HITUNG MATEMATIS TRADING
+        function calculate() {
+            const baseEntry = parseFloat(document.getElementById('entryPrice').value);
+            const slPips = parseFloat(document.getElementById('stoplossPips').value);
+            const spreadPoints = parseFloat(document.getElementById('spreadPoints').value);
+            const decimals = parseInt(document.getElementById('decimalPlaces').value);
+
+            if (isNaN(baseEntry) || isNaN(slPips) || isNaN(spreadPoints)) {
+                return;
+            }
+
+            const pointValue = Math.pow(10, -decimals); 
+
+            const slPoints = slPips * 10;
+            const spreadValue = spreadPoints * pointValue;
+            const slValue = slPoints * pointValue;
+
+            let realEntry = 0; let finalSL = 0; let riskSize = 0;
+            let tp1 = 0, tp2 = 0, tp3 = 0;
+
+            if (currentDirection === 'SELL') {
+                realEntry = baseEntry - spreadValue; 
+                finalSL = realEntry + (slValue + spreadValue); 
+                riskSize = finalSL - realEntry;
+
+                tp1 = realEntry - (riskSize * 1);
+                tp2 = realEntry - (riskSize * 2);
+                tp3 = realEntry - (riskSize * 3);
+            } else {
+                realEntry = baseEntry + spreadValue;
+                finalSL = realEntry - (slValue + spreadValue);
+                riskSize = realEntry - finalSL;
+
+                tp1 = realEntry + (riskSize * 1);
+                tp2 = realEntry + (riskSize * 2);
+                tp3 = realEntry + (riskSize * 3);
+            }
+
+            document.getElementById('outEntry').innerText = realEntry.toFixed(decimals);
+            document.getElementById('outSL').innerText = finalSL.toFixed(decimals);
+            document.getElementById('outTP1').innerText = tp1.toFixed(decimals);
+            document.getElementById('outTP2').innerText = tp2.toFixed(decimals);
+            document.getElementById('outTP3').innerText = tp3.toFixed(decimals);
+        }
+
+        window.onload = function() {
+            loadSavedState(); // Load semua state (Tema & Form input) dari storage
+            const pips = parseFloat(document.getElementById('stoplossPips').value) || 0;
+            document.getElementById('slPointInfo').innerText = `*${pips * 10} Points`;
+            calculate();
+        };
+    </script>
+</body>
+</html>
