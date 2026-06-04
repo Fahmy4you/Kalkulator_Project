@@ -230,33 +230,49 @@
                 return;
             }
 
+            // Menghitung nilai 1 point berdasarkan digit desimal
             const pointValue = Math.pow(10, -decimals); 
 
             const slPoints = slPips * 10;
             const spreadValue = spreadPoints * pointValue;
             const slValue = slPoints * pointValue;
 
-            let realEntry = 0; let finalSL = 0; let riskSize = 0;
+            let realEntry = 0; 
+            let finalSL = 0; 
+            let riskSize = 0;
             let tp1 = 0, tp2 = 0, tp3 = 0;
 
             if (currentDirection === 'SELL') {
+                // 1. Entry disesuaikan (dikurangi spread agar kejemput)
                 realEntry = baseEntry - spreadValue; 
-                finalSL = realEntry + (slValue + spreadValue); 
+                
+                // 2. SL disesuaikan (ditambah spread dari harga realEntry)
+                finalSL = baseEntry + slValue + spreadValue; 
+                
+                // 3. Jarak Risk bersih dari Entry yang sudah bergeser ke SL yang sudah bergeser
                 riskSize = finalSL - realEntry;
 
+                // 4. Target Profit dihitung dari Real Entry
                 tp1 = realEntry - (riskSize * 1);
                 tp2 = realEntry - (riskSize * 2);
                 tp3 = realEntry - (riskSize * 3);
             } else {
+                // 1. Entry disesuaikan (ditambah spread agar kejemput)
                 realEntry = baseEntry + spreadValue;
-                finalSL = realEntry - (slValue + spreadValue);
+                
+                // 2. SL disesuaikan (dikurangi spread dari harga realEntry)
+                finalSL = baseEntry - slValue - spreadValue;
+                
+                // 3. Jarak Risk bersih
                 riskSize = realEntry - finalSL;
 
+                // 4. Target Profit dihitung dari Real Entry
                 tp1 = realEntry + (riskSize * 1);
                 tp2 = realEntry + (riskSize * 2);
                 tp3 = realEntry + (riskSize * 3);
             }
 
+            // Tampilkan hasil akhir ke UI
             document.getElementById('outEntry').innerText = realEntry.toFixed(decimals);
             document.getElementById('outSL').innerText = finalSL.toFixed(decimals);
             document.getElementById('outTP1').innerText = tp1.toFixed(decimals);
