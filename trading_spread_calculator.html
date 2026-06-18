@@ -41,9 +41,9 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label id="lblSL" class="block text-sm font-medium text-gray-700">Stoploss (Pips)</label>
-                            <input type="number" id="stoplossPips" value="40" oninput="saveAndCalculate()" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
-                            <p class="text-xs text-gray-400 mt-1" id="slPointInfo">*400 Points</p>
+                            <label id="lblSL" class="block text-sm font-medium text-gray-700">Stoploss (Points)</label>
+                            <input type="number" id="stoplossPoints" value="400" oninput="saveAndCalculate()" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <p class="text-xs text-gray-400 mt-1" id="slPointInfo">*40 Pips</p>
                         </div>
                         <div>
                             <label id="lblSpread" class="block text-sm font-medium text-gray-700">Spread (Points)</label>
@@ -72,23 +72,38 @@
                 <div class="space-y-3 flex flex-col justify-center">
                     <div id="boxEntry" class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-blue-500">
                         <span id="lblResEntry" class="text-sm font-semibold text-gray-600">ENTRY :</span>
-                        <span id="outEntry" class="font-mono font-bold text-gray-800 text-base md:text-lg">-</span>
+                        <div class="flex items-center gap-3">
+                            <span id="outEntry" class="font-mono font-bold text-gray-800 text-base md:text-lg">-</span>
+                            <button onclick="copyToClipboard('outEntry', this)" class="copy-btn px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded font-semibold transition-all cursor-pointer">Copy</button>
+                        </div>
                     </div>
                     <div id="boxSL" class="flex justify-between items-center p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
                         <span class="text-sm font-semibold text-red-700">STOPLOSS :</span>
-                        <span id="outSL" class="font-mono font-bold text-red-700 text-base md:text-lg">-</span>
+                        <div class="flex items-center gap-3">
+                            <span id="outSL" class="font-mono font-bold text-red-700 text-base md:text-lg">-</span>
+                            <button onclick="copyToClipboard('outSL', this)" class="copy-btn px-2 py-1 text-xs bg-red-200 hover:bg-red-300 dark:bg-red-900/60 dark:hover:bg-red-800 text-red-700 dark:text-red-300 rounded font-semibold transition-all cursor-pointer">Copy</button>
+                        </div>
                     </div>
                     <div id="boxTP1" class="flex justify-between items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
                         <span class="text-sm font-semibold text-green-700">TP 1 (1:1) :</span>
-                        <span id="outTP1" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                        <div class="flex items-center gap-3">
+                            <span id="outTP1" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                            <button onclick="copyToClipboard('outTP1', this)" class="copy-btn px-2 py-1 text-xs bg-green-200 hover:bg-green-300 dark:bg-green-900/60 dark:hover:bg-green-800 text-green-700 dark:text-green-300 rounded font-semibold transition-all cursor-pointer">Copy</button>
+                        </div>
                     </div>
                     <div id="boxTP2" class="flex justify-between items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
                         <span class="text-sm font-semibold text-green-700">TP 2 (1:2) :</span>
-                        <span id="outTP2" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                        <div class="flex items-center gap-3">
+                            <span id="outTP2" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                            <button onclick="copyToClipboard('outTP2', this)" class="copy-btn px-2 py-1 text-xs bg-green-200 hover:bg-green-300 dark:bg-green-900/60 dark:hover:bg-green-800 text-green-700 dark:text-green-300 rounded font-semibold transition-all cursor-pointer">Copy</button>
+                        </div>
                     </div>
                     <div id="boxTP3" class="flex justify-between items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
                         <span class="text-sm font-semibold text-green-700">TP 3 (1:3) :</span>
-                        <span id="outTP3" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                        <div class="flex items-center gap-3">
+                            <span id="outTP3" class="font-mono font-bold text-green-700 text-base md:text-lg">-</span>
+                            <button onclick="copyToClipboard('outTP3', this)" class="copy-btn px-2 py-1 text-xs bg-green-200 hover:bg-green-300 dark:bg-green-900/60 dark:hover:bg-green-800 text-green-700 dark:text-green-300 rounded font-semibold transition-all cursor-pointer">Copy</button>
+                        </div>
                     </div>
                 </div>
 
@@ -105,13 +120,12 @@
             isDark = darkModeActive;
             const wrapper = document.getElementById('themeWrapper');
             const card = document.getElementById('cardApp');
-            const header = document.getElementById('headerApp');
             const title = document.getElementById('titleApp');
             const btnTheme = document.getElementById('btnTheme');
             const themeIcon = document.getElementById('themeIcon');
             const themeText = document.getElementById('themeText');
             
-            const inputs = [document.getElementById('entryPrice'), document.getElementById('stoplossPips'), document.getElementById('spreadPoints'), document.getElementById('decimalPlaces')];
+            const inputs = [document.getElementById('entryPrice'), document.getElementById('stoplossPoints'), document.getElementById('spreadPoints'), document.getElementById('decimalPlaces')];
             const labels = [document.getElementById('lblType'), document.getElementById('lblEntry'), document.getElementById('lblSL'), document.getElementById('lblSpread'), document.getElementById('lblDecimal')];
             const boxEntry = document.getElementById('boxEntry');
             const lblResEntry = document.getElementById('lblResEntry');
@@ -149,7 +163,7 @@
                 ['boxTP1', 'boxTP2', 'boxTP3'].forEach(id => document.getElementById(id).className = "flex justify-between items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500");
                 ['outTP1', 'outTP2', 'outTP3'].forEach(id => document.getElementById(id).className = "font-mono font-bold text-green-700 text-base md:text-lg");
             }
-            setDirection(currentDirection, false); // Sinkronkan ulang button, bypass saving loop
+            setDirection(currentDirection, false); // Sinkronkan ulang button
         }
 
         function toggleDarkMode() {
@@ -160,16 +174,15 @@
 
         // 2. FUNGSI AUTO SAVE DATA INPUTAN & POSISI
         function saveAndCalculate() {
-            // Simpan value inputan terbaru ke LocalStorage
             localStorage.setItem('tr_entryPrice', document.getElementById('entryPrice').value);
-            localStorage.setItem('tr_stoplossPips', document.getElementById('stoplossPips').value);
+            localStorage.setItem('tr_stoplossPoints', document.getElementById('stoplossPoints').value);
             localStorage.setItem('tr_spreadPoints', document.getElementById('spreadPoints').value);
             localStorage.setItem('tr_decimalPlaces', document.getElementById('decimalPlaces').value);
             localStorage.setItem('tr_direction', currentDirection);
 
-            // Update keterangan pips text info secara real-time
-            const pips = parseFloat(document.getElementById('stoplossPips').value) || 0;
-            document.getElementById('slPointInfo').innerText = `*${pips * 10} Points`;
+            // Update keterangan pips text info secara real-time (Points / 10 = Pips)
+            const points = parseFloat(document.getElementById('stoplossPoints').value) || 0;
+            document.getElementById('slPointInfo').innerText = `*${points / 10} Pips`;
 
             calculate();
         }
@@ -196,7 +209,6 @@
 
         // 3. AMBIL DATA DARI STORAGE SAAT HALAMAN DI-LOAD (RESTORE STATE)
         function loadSavedState() {
-            // Restore Tema
             const savedTheme = localStorage.getItem('trading_theme');
             if (savedTheme !== null) {
                 applyTheme(savedTheme === 'dark');
@@ -204,36 +216,32 @@
                 applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
             }
 
-            // Restore Nilai Form Input (Jika ada di storage)
             if (localStorage.getItem('tr_entryPrice') !== null) document.getElementById('entryPrice').value = localStorage.getItem('tr_entryPrice');
-            if (localStorage.getItem('tr_stoplossPips') !== null) document.getElementById('stoplossPips').value = localStorage.getItem('tr_stoplossPips');
+            if (localStorage.getItem('tr_stoplossPoints') !== null) document.getElementById('stoplossPoints').value = localStorage.getItem('tr_stoplossPoints');
             if (localStorage.getItem('tr_spreadPoints') !== null) document.getElementById('spreadPoints').value = localStorage.getItem('tr_spreadPoints');
             if (localStorage.getItem('tr_decimalPlaces') !== null) document.getElementById('decimalPlaces').value = localStorage.getItem('tr_decimalPlaces');
             
-            // Restore Tipe Arah Posisi
             const savedDirection = localStorage.getItem('tr_direction');
             if (savedDirection !== null) {
                 setDirection(savedDirection, false);
             } else {
-                setDirection('SELL', false); // Default ikut studi kasus awal
+                setDirection('SELL', false);
             }
         }
 
-        // 4. LOGIKA HITUNG MATEMATIS TRADING
+        // 4. LOGIKA HITUNG MATEMATIS TRADING (BERDASARKAN UNIT POINT)
         function calculate() {
             const baseEntry = parseFloat(document.getElementById('entryPrice').value);
-            const slPips = parseFloat(document.getElementById('stoplossPips').value);
+            const slPoints = parseFloat(document.getElementById('stoplossPoints').value);
             const spreadPoints = parseFloat(document.getElementById('spreadPoints').value);
             const decimals = parseInt(document.getElementById('decimalPlaces').value);
 
-            if (isNaN(baseEntry) || isNaN(slPips) || isNaN(spreadPoints)) {
+            if (isNaN(baseEntry) || isNaN(slPoints) || isNaN(spreadPoints)) {
                 return;
             }
 
-            // Menghitung nilai 1 point berdasarkan digit desimal
             const pointValue = Math.pow(10, -decimals); 
 
-            const slPoints = slPips * 10;
             const spreadValue = spreadPoints * pointValue;
             const slValue = slPoints * pointValue;
 
@@ -243,36 +251,23 @@
             let tp1 = 0, tp2 = 0, tp3 = 0;
 
             if (currentDirection === 'SELL') {
-                // 1. Entry disesuaikan (dikurangi spread agar kejemput)
                 realEntry = baseEntry - spreadValue; 
-                
-                // 2. SL disesuaikan (ditambah spread dari harga realEntry)
                 finalSL = baseEntry + slValue + spreadValue; 
-                
-                // 3. Jarak Risk bersih dari Entry yang sudah bergeser ke SL yang sudah bergeser
                 riskSize = finalSL - realEntry;
 
-                // 4. Target Profit dihitung dari Real Entry
                 tp1 = realEntry - (riskSize * 1);
                 tp2 = realEntry - (riskSize * 2);
                 tp3 = realEntry - (riskSize * 3);
             } else {
-                // 1. Entry disesuaikan (ditambah spread agar kejemput)
                 realEntry = baseEntry + spreadValue;
-                
-                // 2. SL disesuaikan (dikurangi spread dari harga realEntry)
                 finalSL = baseEntry - slValue - spreadValue;
-                
-                // 3. Jarak Risk bersih
                 riskSize = realEntry - finalSL;
 
-                // 4. Target Profit dihitung dari Real Entry
                 tp1 = realEntry + (riskSize * 1);
                 tp2 = realEntry + (riskSize * 2);
                 tp3 = realEntry + (riskSize * 3);
             }
 
-            // Tampilkan hasil akhir ke UI
             document.getElementById('outEntry').innerText = realEntry.toFixed(decimals);
             document.getElementById('outSL').innerText = finalSL.toFixed(decimals);
             document.getElementById('outTP1').innerText = tp1.toFixed(decimals);
@@ -280,10 +275,29 @@
             document.getElementById('outTP3').innerText = tp3.toFixed(decimals);
         }
 
+        // 5. FUNGSI COPY TO CLIPBOARD
+        function copyToClipboard(elementId, btnElement) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            if (textToCopy === "-") return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = "Copied!";
+                btnElement.style.pointerEvents = "none";
+                
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.style.pointerEvents = "auto";
+                }, 1500);
+            }).catch(err => {
+                console.error("Gagal menyalin text: ", err);
+            });
+        }
+
         window.onload = function() {
-            loadSavedState(); // Load semua state (Tema & Form input) dari storage
-            const pips = parseFloat(document.getElementById('stoplossPips').value) || 0;
-            document.getElementById('slPointInfo').innerText = `*${pips * 10} Points`;
+            loadSavedState();
+            const points = parseFloat(document.getElementById('stoplossPoints').value) || 0;
+            document.getElementById('slPointInfo').innerText = `*${points / 10} Pips`;
             calculate();
         };
     </script>
