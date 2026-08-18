@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Rules Candle</title>
+    <!-- Google Fonts Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --input-bg: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.2);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.2);
+            --border: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.03em;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            padding: 1rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.3rem;
+            display: inline-block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem 1.2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 0.3rem;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .result-box {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .advise-header {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+        }
+
+        .advise-header b {
+            color: var(--primary);
+        }
+
+        .reason-title {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .reason-list {
+            padding-left: 1.2rem;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .reason-list li {
+            margin-bottom: 0.2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin: 0 0.2rem;
+        }
+
+        .badge-true {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .badge-false {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px dashed var(--border);
+            margin: 0.6rem 0 0.4rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Kalkulator Rule Candle</h2>
+        <form id="calcForm">
+            <div class="form-grid">
+                <!-- 1. Size Candle 1 -->
+                <div class="form-group full-width">
+                    <label for="sizeIbu">Ukuran candle 1 (Candle ibu, atau outsidebar)</label>
+                    <input type="number" id="sizeIbu" step="any" placeholder="Contoh: 70" required>
+                </div>
+                
+                <!-- 2. Size Ekor -->
+                <div class="form-group">
+                    <label for="sizeEkor">Ukuran Ekor Ibu/Outsidebar Candle</label>
+                    <input type="number" id="sizeEkor" step="any" placeholder="Contoh: 40" required>
+                </div>
+
+                <!-- 3. Size Candle 2 -->
+                <div class="form-group">
+                    <label for="sizeAnak">Ukuran candle 2 (Anak / sebelumnya)</label>
+                    <input type="number" id="sizeAnak" step="any" placeholder="Contoh: 50" required>
+                </div>
+
+                <!-- 4. Persentase Ekor -->
+                <div class="form-group">
+                    <label for="persenEkor">Persentase Ekor (%)</label>
+                    <input type="number" id="persenEkor" step="any" placeholder="Contoh: 30" value="30" required>
+                </div>
+
+                <!-- 5. Persentase Candle 2 -->
+                <div class="form-group">
+                    <label for="persenAnak">Persentase Candle 2 (%)</label>
+                    <input type="number" id="persenAnak" step="any" placeholder="Contoh: 50" value="50" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <button type="submit">Kalkulasi</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Container Hasil Kalkulasi -->
+        <div id="resultBox" class="result-box" style="display: none;">
+            <hr class="divider">
+            <div class="result-card">
+                <div id="adviseText" class="advise-header"></div>
+                <div class="reason-title">dikarenakan alasan:</div>
+                <ul id="reasonList" class="reason-list"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const calcForm = document.getElementById('calcForm');
+    const resultBox = document.getElementById('resultBox');
+    const adviseText = document.getElementById('adviseText');
+    const reasonList = document.getElementById('reasonList');
+
+    const STORAGE_KEY = 'candle_calculator_saved_inputs';
+
+    document.addEventListener('DOMContentLoaded', loadSavedInputs);
+
+    function loadSavedInputs() {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            const inputs = JSON.parse(savedData);
+            document.getElementById('sizeIbu').value = inputs.sizeIbu || '';
+            document.getElementById('sizeEkor').value = inputs.sizeEkor || '';
+            document.getElementById('sizeAnak').value = inputs.sizeAnak || '';
+            document.getElementById('persenEkor').value = inputs.persenEkor || '30';
+            document.getElementById('persenAnak').value = inputs.persenAnak || '50';
+            
+            calculateRules(inputs);
+        }
+    }
+
+    calcForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const inputs = {
+            sizeIbu: parseFloat(document.getElementById('sizeIbu').value),
+            sizeEkor: parseFloat(document.getElementById('sizeEkor').value),
+            sizeAnak: parseFloat(document.getElementById('sizeAnak').value),
+            persenEkor: parseFloat(document.getElementById('persenEkor').value),
+            persenAnak: parseFloat(document.getElementById('persenAnak').value)
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(inputs));
+        calculateRules(inputs);
+    });
+
+    function calculateRules(inputs) {
+        const { sizeIbu, sizeAnak, sizeEkor, persenEkor, persenAnak } = inputs;
+
+        // Pembulatan (< 0.5 ke bawah, >= 0.5 ke atas)
+        const batasEkor = Math.round((sizeIbu * persenEkor) / 100);
+        const batasAnak = Math.round((sizeIbu * persenAnak) / 100);
+
+        let targetSL = "";
+        let listHTML = `<li>Pertama, cek ukuran ekor candle 1 (${sizeEkor}).</li>`;
+
+        // STEP 1: CEK EKOR
+        if (sizeEkor > batasEkor) {
+            targetSL = "Open atau Close Candle";
+            listHTML += `<li>Ukuran ekor (${sizeEkor}) <b>lebih dari</b> ${persenEkor} persen candle 1 (${batasEkor}), maka <span class="badge badge-false">FALSE</span>. Berarti syarat tidak lolos. Kamu langsung pasang Stop Loss di Open atau Close Candle.</li>`;
+        } else {
+            // Perbaikan kata-kata agar lebih enak dibaca & tidak rancu
+            let teksEkor = (sizeEkor === batasEkor) ? "sama dengan" : "kurang dari";
+            
+            listHTML += `<li>Ukuran ekor (${sizeEkor}) <b>${teksEkor}</b> ${persenEkor} persen candle 1 (${batasEkor}), maka <span class="badge badge-true">TRUE</span>. Baru lanjut cek lagi.</li>`;
+
+            // STEP 2: CEK CANDLE 2
+            if (sizeAnak < batasAnak) {
+                targetSL = "Low untuk Buy, atau High untuk Sell pada candle 2";
+                listHTML += `<li>Ukuran candle 2 (${sizeAnak}) <b>kurang dari</b> ${persenAnak} persen ukuran candle 1 (${batasAnak}), maka <span class="badge badge-true">TRUE</span>. Maka setup ini valid. Kamu bisa pasang Stop Loss di Low untuk Buy, atau High untuk Sell pada candle 2.</li>`;
+            } else {
+                targetSL = "Open atau Close Candle";
+                let teksAnak = (sizeAnak === batasAnak) ? "sama dengan" : "lebih dari";
+                listHTML += `<li>Ukuran candle 2 (${sizeAnak}) <b>${teksAnak}</b> ${persenAnak} persen ukuran candle 1 (${batasAnak}), maka <span class="badge badge-false">FALSE</span>. Setup ini tidak lolos. Kamu pakai Stop Loss di Open atau Close Candle.</li>`;
+            }
+        }
+
+        adviseText.innerHTML = `Advise Letakkan SL di <b>${targetSL}</b>`;
+        reasonList.innerHTML = listHTML;
+
+        resultBox.style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
