@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Rules Candle</title>
+    <!-- Google Fonts Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <style>
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        body { font-family: 'Poppins', sans-serif; }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        /* Result Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.55rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin: 0 0.25rem;
+        }
+        .badge-true {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .dark .badge-true {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.4);
+        }
+        .badge-false {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+        .dark .badge-false {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border-color: rgba(248, 113, 113, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
+
+    <!-- NAVBAR RESPONSIF -->
+    <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300 shadow-sm">
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-2">
+                
+                <!-- BRAND / TITLE -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="text-xl">📈</span>
+                    <span class="font-extrabold text-base sm:text-lg text-blue-600 dark:text-blue-400 tracking-tight hidden md:inline">Trading Suite</span>
+                </div>
+
+                <!-- NAVIGASI TAB MODUL (SCROLLABLE ON MOBILE) -->
+                <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl text-xs font-bold overflow-x-auto no-scrollbar max-w-[calc(100vw-110px)] md:max-w-none">
+                    <a href="/" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        🧮 Kalkulator
+                    </a>
+                    <a href="/trading_spread_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        📊 Spread & RR
+                    </a>
+                    <a href="/rules_sl_candle_calculator.html" class="px-2.5 sm:px-3.5 bg-blue-600 dark:bg-blue-500 text-white py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        🚀 SL Rules
+                    </a>
+                    <a href="/cross_lev_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap shadow-sm">
+                        ⚡ Position Size
+                    </a>
+                </div>
+
+                <!-- TOGGLE DARK MODE -->
+                <button onclick="toggleDarkMode()" id="btnTheme" class="shrink-0 p-2 sm:p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 cursor-pointer transition-all text-xs font-semibold flex items-center gap-1.5 border border-gray-200 dark:border-gray-700">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText" class="hidden lg:inline">Dark</span>
+                </button>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main class="flex-1 w-full max-w-full overflow-x-hidden flex items-center justify-center p-3 sm:p-6 md:p-8">
+        <div class="bg-white dark:bg-gray-900 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl border border-gray-200/80 dark:border-gray-800 w-full max-w-2xl transition-colors duration-300 overflow-hidden">
+            
+            <!-- HEADER -->
+            <div class="border-b border-gray-100 dark:border-gray-800 pb-3.5 sm:pb-4 mb-4 sm:mb-6">
+                <h1 class="text-lg sm:text-xl md:text-2xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tight flex items-center gap-2">
+                    🚀 Kalkulator Rule Candle
+                </h1>
+                <p class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">Analisis Rule Stop Loss Berdasarkan Ukuran Candle & Ekor</p>
+            </div>
+
+            <!-- FORM GRID -->
+            <form id="calcForm" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 w-full">
+                    
+                    <!-- 1. Size Candle 1 -->
+                    <div class="sm:col-span-2">
+                        <label for="sizeIbu" class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Ukuran candle 1 (Candle ibu, atau outsidebar)</label>
+                        <input type="number" id="sizeIbu" step="any" placeholder="Contoh: 70" required class="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                    </div>
+                    
+                    <!-- 2. Size Ekor -->
+                    <div>
+                        <label for="sizeEkor" class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Ukuran Ekor Ibu/Outsidebar</label>
+                        <input type="number" id="sizeEkor" step="any" placeholder="Contoh: 40" required class="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                    </div>
+
+                    <!-- 3. Size Candle 2 -->
+                    <div>
+                        <label for="sizeAnak" class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Ukuran candle 2 (Anak / sebelumnya)</label>
+                        <input type="number" id="sizeAnak" step="any" placeholder="Contoh: 50" required class="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                    </div>
+
+                    <!-- 4. Persentase Ekor -->
+                    <div>
+                        <label for="persenEkor" class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Persentase Ekor (%)</label>
+                        <input type="number" id="persenEkor" step="any" placeholder="Contoh: 30" value="30" required class="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                    </div>
+
+                    <!-- 5. Persentase Candle 2 -->
+                    <div>
+                        <label for="persenAnak" class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Persentase Candle 2 (%)</label>
+                        <input type="number" id="persenAnak" step="any" placeholder="Contoh: 50" value="50" required class="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                    </div>
+
+                    <!-- TOMBOL SUBMIT -->
+                    <div class="sm:col-span-2 pt-1">
+                        <button type="submit" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/30 transition-all text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-2">
+                            <span>⚡</span> Kalkulasi Rule
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- Container Hasil Kalkulasi -->
+            <div id="resultBox" class="flex-col mt-5 sm:mt-6 border-t border-gray-100 dark:border-gray-800 pt-4 sm:pt-5" style="display: none;">
+                <div class="bg-gray-50 dark:bg-gray-800/50 p-4 sm:p-5 rounded-2xl border border-gray-200/80 dark:border-gray-700/60 space-y-3 w-full shadow-inner">
+                    <div id="adviseText" class="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white flex flex-wrap items-center gap-1.5 pb-2 border-b border-gray-200 dark:border-gray-700/60"></div>
+                    <div class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Dikarenakan Alasan:</div>
+                    <ul id="reasonList" class="space-y-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 font-normal list-disc pl-5 leading-relaxed"></ul>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+<script>
+    // 1. THEME CONTROLLER
+    let isDark = false;
+
+    function applyTheme(darkModeActive) {
+        isDark = darkModeActive;
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+            themeIcon.innerText = '☀️'; 
+            themeText.innerText = 'Light';
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeIcon.innerText = '🌙'; 
+            themeText.innerText = 'Dark';
+        }
+    }
+
+    function toggleDarkMode() {
+        const nextState = !isDark;
+        applyTheme(nextState);
+        localStorage.setItem('trading_theme', nextState ? 'dark' : 'light');
+    }
+
+    function initTheme() {
+        const savedTheme = localStorage.getItem('trading_theme');
+        applyTheme(savedTheme !== null ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+
+    // 2. LOGIC KALKULATOR (100% UNCHANGED)
+    const calcForm = document.getElementById('calcForm');
+    const resultBox = document.getElementById('resultBox');
+    const adviseText = document.getElementById('adviseText');
+    const reasonList = document.getElementById('reasonList');
+
+    const STORAGE_KEY = 'candle_calculator_saved_inputs';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initTheme();
+        loadSavedInputs();
+    });
+
+    function loadSavedInputs() {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            const inputs = JSON.parse(savedData);
+            document.getElementById('sizeIbu').value = inputs.sizeIbu || '';
+            document.getElementById('sizeEkor').value = inputs.sizeEkor || '';
+            document.getElementById('sizeAnak').value = inputs.sizeAnak || '';
+            document.getElementById('persenEkor').value = inputs.persenEkor || '30';
+            document.getElementById('persenAnak').value = inputs.persenAnak || '50';
+            
+            calculateRules(inputs);
+        }
+    }
+
+    calcForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const inputs = {
+            sizeIbu: parseFloat(document.getElementById('sizeIbu').value),
+            sizeEkor: parseFloat(document.getElementById('sizeEkor').value),
+            sizeAnak: parseFloat(document.getElementById('sizeAnak').value),
+            persenEkor: parseFloat(document.getElementById('persenEkor').value),
+            persenAnak: parseFloat(document.getElementById('persenAnak').value)
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(inputs));
+        calculateRules(inputs);
+    });
+
+    function calculateRules(inputs) {
+        const { sizeIbu, sizeAnak, sizeEkor, persenEkor, persenAnak } = inputs;
+
+        // Pembulatan (< 0.5 ke bawah, >= 0.5 ke atas)
+        const batasEkor = Math.round((sizeIbu * persenEkor) / 100);
+        const batasAnak = Math.round((sizeIbu * persenAnak) / 100);
+
+        let targetSL = "";
+        let listHTML = `<li>Pertama, cek ukuran ekor candle 1 (${sizeEkor}).</li>`;
+
+        // STEP 1: CEK EKOR
+        if (sizeEkor > batasEkor) {
+            targetSL = "Open atau Close Candle";
+            listHTML += `<li>Ukuran ekor (${sizeEkor}) <b>lebih dari</b> ${persenEkor} persen candle 1 (${batasEkor}), maka <span class="badge badge-false">FALSE</span>. Berarti syarat tidak lolos. Kamu langsung pasang Stop Loss di Open atau Close Candle.</li>`;
+        } else {
+            // Perbaikan kata-kata agar lebih enak dibaca & tidak rancu
+            let teksEkor = (sizeEkor === batasEkor) ? "sama dengan" : "kurang dari";
+            
+            listHTML += `<li>Ukuran ekor (${sizeEkor}) <b>${teksEkor}</b> ${persenEkor} persen candle 1 (${batasEkor}), maka <span class="badge badge-true">TRUE</span>. Baru lanjut cek lagi.</li>`;
+
+            // STEP 2: CEK CANDLE 2
+            if (sizeAnak < batasAnak) {
+                targetSL = "Low untuk Buy, atau High untuk Sell pada candle 2";
+                listHTML += `<li>Ukuran candle 2 (${sizeAnak}) <b>kurang dari</b> ${persenAnak} persen ukuran candle 1 (${batasAnak}), maka <span class="badge badge-true">TRUE</span>. Maka setup ini valid. Kamu bisa pasang Stop Loss di Low untuk Buy, atau High untuk Sell pada candle 2.</li>`;
+            } else {
+                targetSL = "Open atau Close Candle";
+                let teksAnak = (sizeAnak === batasAnak) ? "sama dengan" : "lebih dari";
+                listHTML += `<li>Ukuran candle 2 (${sizeAnak}) <b>${teksAnak}</b> ${persenAnak} persen ukuran candle 1 (${batasAnak}), maka <span class="badge badge-false">FALSE</span>. Setup ini tidak lolos. Kamu pakai Stop Loss di Open atau Close Candle.</li>`;
+            }
+        }
+
+        adviseText.innerHTML = `Advise Letakkan SL di <b>${targetSL}</b>`;
+        reasonList.innerHTML = listHTML;
+
+        resultBox.style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>

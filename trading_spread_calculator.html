@@ -17,191 +17,240 @@
         }
     </script>
     <style>
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         body { font-family: 'Poppins', sans-serif; }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen flex items-center justify-center p-4 md:p-8 transition-colors duration-300">
+<body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
 
-    <div class="bg-white dark:bg-gray-900 p-6 md:p-8 rounded-3xl shadow-2xl border border-gray-200/80 dark:border-gray-800 w-full max-w-full md:max-w-5xl transition-colors duration-300">
-        
-        <!-- HEADER -->
-        <div class="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
-            <div>
-                <h1 class="text-xl md:text-2xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tight">Trading RR & Spread Calculator</h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Kalkulator Akurat dengan Penyesuaian Spread</p>
+    <!-- NAVBAR RESPONSIF -->
+    <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300 shadow-sm">
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-2">
+                
+                <!-- BRAND / TITLE -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="text-xl">📈</span>
+                    <span class="font-extrabold text-base sm:text-lg text-blue-600 dark:text-blue-400 tracking-tight hidden md:inline">Trading Suite</span>
+                </div>
+
+                <!-- NAVIGASI TAB MODUL (SCROLLABLE ON MOBILE) -->
+                <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl text-xs font-bold overflow-x-auto no-scrollbar max-w-[calc(100vw-110px)] md:max-w-none">
+                    <a href="/" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        🧮 Kalkulator
+                    </a>
+                    <a href="/trading_spread_calculator.html" class="px-2.5 sm:px-3.5 bg-blue-600 dark:bg-blue-500 text-white py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        📊 Spread & RR
+                    </a>
+                    <a href="/rules_sl_candle_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        🚀 SL Rules
+                    </a>
+                    <a href="/cross_lev_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap shadow-sm">
+                        ⚡ Position Size
+                    </a>
+                </div>
+
+                <!-- TOGGLE DARK MODE -->
+                <button onclick="toggleDarkMode()" id="btnTheme" class="shrink-0 p-2 sm:p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 cursor-pointer transition-all text-xs font-semibold flex items-center gap-1.5 border border-gray-200 dark:border-gray-700">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText" class="hidden lg:inline">Dark</span>
+                </button>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 w-full max-w-full overflow-x-hidden flex items-center justify-center p-3 sm:p-6 md:p-8">
+        <div class="bg-white dark:bg-gray-900 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl border border-gray-200/80 dark:border-gray-800 w-full max-w-5xl transition-colors duration-300 overflow-hidden">
+            
+            <!-- HEADER -->
+            <div class="border-b border-gray-100 dark:border-gray-800 pb-3.5 sm:pb-4 mb-4 sm:mb-6">
+                <h1 class="text-lg sm:text-xl md:text-2xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tight flex items-center gap-2">
+                    📊 Trading RR & Spread Calculator
+                </h1>
+                <p class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">Kalkulator Akurat dengan Penyesuaian Spread</p>
             </div>
             
-            <button onclick="toggleDarkMode()" id="btnTheme" class="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 cursor-pointer transition-all text-xs font-semibold flex items-center gap-2 border border-gray-200 dark:border-gray-700">
-                <span id="themeIcon">🌙</span> <span id="themeText" class="hidden sm:inline">Dark</span>
-            </button>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-            
-            <!-- INPUT FORM SECTION -->
-            <div class="lg:col-span-7 space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 md:gap-8 w-full">
                 
-                <!-- TIPE POSISI (BUY / SELL) -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Arah Posisi</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button type="button" id="btnBuy" onclick="setDirection('BUY')" class="py-3 rounded-xl font-bold text-center border-2 border-green-500 bg-green-500 text-white shadow-lg shadow-green-500/20 cursor-pointer transition-all">BUY</button>
-                        <button type="button" id="btnSell" onclick="setDirection('SELL')" class="py-3 rounded-xl font-bold text-center border-2 border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 cursor-pointer transition-all">SELL</button>
-                    </div>
-                </div>
-
-                <!-- ENTRY & SPREAD -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- INPUT FORM SECTION -->
+                <div class="lg:col-span-7 space-y-4 sm:space-y-5 w-full min-w-0">
+                    
+                    <!-- TIPE POSISI (BUY / SELL) -->
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Harga Entry (Base)</label>
-                        <input type="number" id="entryPrice" step="any" value="4531.00" oninput="saveAndCalculate()" class="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono font-semibold transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Spread (Points)</label>
-                        <input type="number" id="spreadPoints" value="40" oninput="saveAndCalculate()" class="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono font-semibold transition-all">
-                        <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1 font-medium" id="spreadInfo">*40 points = 4 pips</p>
-                    </div>
-                </div>
-
-                <!-- STOPLOSS SECTION -->
-                <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200/80 dark:border-gray-700/60 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                            Stoploss (SL)
-                        </label>
-                        <!-- TOGGLE MODE SL -->
-                        <div class="flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-lg text-[11px] font-bold">
-                            <button type="button" id="btnSlModePoint" onclick="setSlMode('POINTS')" class="px-2.5 py-1 rounded-md transition-all cursor-pointer">Points</button>
-                            <button type="button" id="btnSlModePrice" onclick="setSlMode('PRICE')" class="px-2.5 py-1 rounded-md transition-all cursor-pointer">Harga</button>
+                        <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5 sm:mb-2">Arah Posisi</label>
+                        <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+                            <button type="button" id="btnBuy" onclick="setDirection('BUY')" class="py-2.5 sm:py-3 rounded-xl font-bold text-center border-2 border-green-500 bg-green-500 text-white shadow-lg shadow-green-500/20 cursor-pointer transition-all text-xs sm:text-sm">BUY</button>
+                            <button type="button" id="btnSell" onclick="setDirection('SELL')" class="py-2.5 sm:py-3 rounded-xl font-bold text-center border-2 border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 cursor-pointer transition-all text-xs sm:text-sm">SELL</button>
                         </div>
                     </div>
-                    <div>
-                        <input type="number" id="slValue" step="any" value="400" oninput="saveAndCalculate()" placeholder="Masukkan Points atau Harga SL..." class="w-full px-3.5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 text-sm font-mono font-semibold transition-all">
-                        <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1 font-medium" id="slPointInfo">*Points to Pips</p>
-                    </div>
-                </div>
-
-                <!-- TAKE PROFIT CUSTOM SECTION (POINTS / HARGA) -->
-                <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200/80 dark:border-gray-700/60 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                            Take Profit Custom (Opsional)
-                        </label>
-                        <!-- TOGGLE MODE TP -->
-                        <div class="flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-lg text-[11px] font-bold">
-                            <button type="button" id="btnTpModePoint" onclick="setTpMode('POINTS')" class="px-2.5 py-1 rounded-md transition-all cursor-pointer">Points</button>
-                            <button type="button" id="btnTpModePrice" onclick="setTpMode('PRICE')" class="px-2.5 py-1 rounded-md transition-all cursor-pointer">Harga</button>
+    
+                    <!-- ENTRY & SPREAD -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                        <div>
+                            <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Harga Entry (Base)</label>
+                            <input type="number" id="entryPrice" step="any" value="4531.00" oninput="saveAndCalculate()" class="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Spread (Points)</label>
+                            <input type="number" id="spreadPoints" value="40" oninput="saveAndCalculate()" class="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-gray-500 mt-1 font-medium" id="spreadInfo">*40 points = 4 pips</p>
                         </div>
                     </div>
+    
+                    <!-- STOPLOSS SECTION -->
+                    <div class="p-3.5 sm:p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200/80 dark:border-gray-700/60 space-y-2">
+                        <div class="flex justify-between items-center gap-2">
+                            <label class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400 flex items-center gap-1.5 shrink-0">
+                                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                Stoploss (SL)
+                            </label>
+                            <!-- TOGGLE MODE SL -->
+                            <div class="flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-lg text-[10px] sm:text-[11px] font-bold shrink-0">
+                                <button type="button" id="btnSlModePoint" onclick="setSlMode('POINTS')" class="px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer">Points</button>
+                                <button type="button" id="btnSlModePrice" onclick="setSlMode('PRICE')" class="px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer">Harga</button>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="number" id="slValue" step="any" value="400" oninput="saveAndCalculate()" placeholder="Masukkan Points atau Harga SL..." class="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-gray-500 mt-1 font-medium" id="slPointInfo">*Points to Pips</p>
+                        </div>
+                    </div>
+    
+                    <!-- TAKE PROFIT CUSTOM SECTION (POINTS / HARGA) -->
+                    <div class="p-3.5 sm:p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200/80 dark:border-gray-700/60 space-y-2">
+                        <div class="flex justify-between items-center gap-2">
+                            <label class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400 flex items-center gap-1.5 shrink-0">
+                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                Take Profit Custom (Opsional)
+                            </label>
+                            <!-- TOGGLE MODE TP -->
+                            <div class="flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-lg text-[10px] sm:text-[11px] font-bold shrink-0">
+                                <button type="button" id="btnTpModePoint" onclick="setTpMode('POINTS')" class="px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer">Points</button>
+                                <button type="button" id="btnTpModePrice" onclick="setTpMode('PRICE')" class="px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer">Harga</button>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="number" id="tpValue" step="any" placeholder="Masukkan Points atau Harga TP..." oninput="saveAndCalculate()" class="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 text-xs sm:text-sm font-mono font-semibold transition-all">
+                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-gray-500 mt-1 font-medium" id="tpPointInfo">*Points to Pips</p>
+                        </div>
+                    </div>
+    
+                    <!-- KOMPONEN DISESUAIKAN SPREAD -->
+                    <div class="p-3.5 sm:p-4 bg-blue-50/60 dark:bg-blue-950/30 rounded-2xl border border-blue-100 dark:border-blue-900/40">
+                        <label class="block text-[11px] sm:text-xs font-bold text-blue-700 dark:text-blue-300 mb-2 sm:mb-2.5 uppercase tracking-wider">Komponen yang Disesuaikan dengan Spread:</label>
+                        <div class="grid grid-cols-3 gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
+                            <label class="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 cursor-pointer hover:bg-blue-100/50 dark:hover:bg-gray-800 transition-all min-w-0">
+                                <input type="checkbox" id="chkAdjustEntry" checked onchange="saveAndCalculate()" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 shrink-0">
+                                <span class="font-semibold text-gray-700 dark:text-gray-300 truncate">Entry</span>
+                            </label>
+                            <label class="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 cursor-pointer hover:bg-blue-100/50 dark:hover:bg-gray-800 transition-all min-w-0">
+                                <input type="checkbox" id="chkAdjustSL" checked onchange="saveAndCalculate()" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 shrink-0">
+                                <span class="font-semibold text-gray-700 dark:text-gray-300 truncate">Stoploss</span>
+                            </label>
+                            <label class="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 cursor-pointer hover:bg-blue-100/50 dark:hover:bg-gray-800 transition-all min-w-0">
+                                <input type="checkbox" id="chkAdjustTP" onchange="saveAndCalculate()" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 shrink-0">
+                                <span class="font-semibold text-gray-700 dark:text-gray-300 truncate">Take Profit</span>
+                            </label>
+                        </div>
+                    </div>
+    
+                    <!-- DIGIT PRECISION -->
                     <div>
-                        <input type="number" id="tpValue" step="any" placeholder="Masukkan Points atau Harga TP..." oninput="saveAndCalculate()" class="w-full px-3.5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-mono font-semibold transition-all">
-                        <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1 font-medium" id="tpPointInfo">*Points to Pips</p>
+                        <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Jumlah Digit Koma (Decimal)</label>
+                        <select id="decimalPlaces" onchange="saveAndCalculate()" class="w-full px-3 sm:px-3.5 py-2 sm:py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm font-semibold cursor-pointer transition-all">
+                            <option value="0">0 (Contoh: 4531)</option>
+                            <option value="1">1 (Contoh: 4531.0)</option>
+                            <option value="2" selected>2 (Contoh: 4531.00)</option>
+                            <option value="3">3 (Contoh: 1950.123)</option>
+                            <option value="4">4 (Contoh: 1.1234)</option>
+                            <option value="5">5 (Contoh: 1.12345)</option>
+                        </select>
                     </div>
+    
                 </div>
-
-                <!-- KOMPONEN DISESUAIKAN SPREAD -->
-                <div class="p-4 bg-blue-50/60 dark:bg-blue-950/30 rounded-2xl border border-blue-100 dark:border-blue-900/40">
-                    <label class="block text-[11px] font-bold text-blue-700 dark:text-blue-300 mb-2.5 uppercase tracking-wider">Komponen yang Disesuaikan dengan Spread:</label>
-                    <div class="grid grid-cols-3 gap-2 text-xs">
-                        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 cursor-pointer hover:bg-blue-100/50 dark:hover:bg-gray-800 transition-all">
-                            <input type="checkbox" id="chkAdjustEntry" checked onchange="saveAndCalculate()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
-                            <span class="font-semibold text-gray-700 dark:text-gray-300">Entry</span>
-                        </label>
-                        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 cursor-pointer hover:bg-blue-100/50 dark:hover:bg-gray-800 transition-all">
-                            <input type="checkbox" id="chkAdjustSL" checked onchange="saveAndCalculate()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
-                            <span class="font-semibold text-gray-700 dark:text-gray-300">Stoploss</span>
-                        </label>
-                        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 cursor-pointer hover:bg-blue-100/50 dark:hover:bg-gray-800 transition-all">
-                            <input type="checkbox" id="chkAdjustTP" onchange="saveAndCalculate()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
-                            <span class="font-semibold text-gray-700 dark:text-gray-300">Take Profit</span>
-                        </label>
+    
+                <!-- OUTPUT RESULTS SECTION -->
+                <div class="lg:col-span-5 flex flex-col justify-center space-y-4 w-full min-w-0">
+                    
+                    <div class="bg-gray-50 dark:bg-gray-800/40 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-gray-200/80 dark:border-gray-700/60 space-y-3 shadow-inner">
+                        <h3 class="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">Hasil Eksekusi Order</h3>
+    
+                        <!-- ENTRY RESULT -->
+                        <div class="flex justify-between items-center p-3 sm:p-3.5 bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl border-l-4 border-blue-500 shadow-sm border border-gray-100 dark:border-gray-700/80">
+                            <div class="min-w-0 flex-1 mr-2">
+                                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block truncate">ENTRY EXECUTION</span>
+                                <span id="outEntry" class="font-mono font-black text-gray-900 dark:text-white text-base sm:text-lg md:text-xl truncate block">-</span>
+                            </div>
+                            <button onclick="copyToClipboard('outEntry', this)" class="shrink-0 px-2.5 sm:px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-bold transition-all cursor-pointer">Copy</button>
+                        </div>
+    
+                        <!-- STOPLOSS RESULT -->
+                        <div class="flex justify-between items-center p-3 sm:p-3.5 bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl border-l-4 border-red-500 shadow-sm border border-gray-100 dark:border-gray-700/80">
+                            <div class="min-w-0 flex-1 mr-2">
+                                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 block truncate">STOPLOSS</span>
+                                <span id="outSL" class="font-mono font-black text-red-600 dark:text-red-400 text-base sm:text-lg md:text-xl truncate block">-</span>
+                            </div>
+                            <button onclick="copyToClipboard('outSL', this)" class="shrink-0 px-2.5 sm:px-3 py-1.5 text-xs bg-red-50 hover:bg-red-100 dark:bg-red-950/60 dark:hover:bg-red-900/80 text-red-600 dark:text-red-300 rounded-lg font-bold transition-all cursor-pointer">Copy</button>
+                        </div>
+    
+                        <!-- TAKE PROFIT CUSTOM RESULT -->
+                        <div id="boxCustomTP" class="flex justify-between items-center p-3 sm:p-3.5 bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl border-l-4 border-green-500 shadow-sm border border-gray-100 dark:border-gray-700/80">
+                            <div class="min-w-0 flex-1 mr-2">
+                                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-green-600 dark:text-green-400 block truncate">TAKE PROFIT (CUSTOM)</span>
+                                <span id="outCustomTP" class="font-mono font-black text-green-600 dark:text-green-400 text-base sm:text-lg md:text-xl truncate block">-</span>
+                            </div>
+                            <button onclick="copyToClipboard('outCustomTP', this)" class="shrink-0 px-2.5 sm:px-3 py-1.5 text-xs bg-green-50 hover:bg-green-100 dark:bg-green-950/60 dark:hover:bg-green-900/80 text-green-600 dark:text-green-300 rounded-lg font-bold transition-all cursor-pointer">Copy</button>
+                        </div>
+    
+                        <!-- REKOMENDASI RISK REWARD TAKE PROFIT -->
+                        <div class="pt-1.5 sm:pt-2">
+                            <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block mb-2">Rekomendasi Take Profit (RR):</span>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center p-2.5 bg-white dark:bg-gray-800/90 rounded-xl border border-gray-100 dark:border-gray-700/60">
+                                    <span class="text-xs font-bold text-gray-600 dark:text-gray-300">TP 1 (1:1)</span>
+                                    <div class="flex items-center gap-2">
+                                        <span id="recTP1" class="font-mono font-bold text-green-600 dark:text-green-400 text-xs sm:text-sm">-</span>
+                                        <button onclick="copyToClipboard('recTP1', this)" class="px-2 py-1 text-[10px] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded font-bold transition-all cursor-pointer">Copy</button>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2.5 bg-white dark:bg-gray-800/90 rounded-xl border border-gray-100 dark:border-gray-700/60">
+                                    <span class="text-xs font-bold text-gray-600 dark:text-gray-300">TP 2 (1:2)</span>
+                                    <div class="flex items-center gap-2">
+                                        <span id="recTP2" class="font-mono font-bold text-green-600 dark:text-green-400 text-xs sm:text-sm">-</span>
+                                        <button onclick="copyToClipboard('recTP2', this)" class="px-2 py-1 text-[10px] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded font-bold transition-all cursor-pointer">Copy</button>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2.5 bg-white dark:bg-gray-800/90 rounded-xl border border-gray-100 dark:border-gray-700/60">
+                                    <span class="text-xs font-bold text-gray-600 dark:text-gray-300">TP 3 (1:3)</span>
+                                    <div class="flex items-center gap-2">
+                                        <span id="recTP3" class="font-mono font-bold text-green-600 dark:text-green-400 text-xs sm:text-sm">-</span>
+                                        <button onclick="copyToClipboard('recTP3', this)" class="px-2 py-1 text-[10px] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded font-bold transition-all cursor-pointer">Copy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
                     </div>
+    
                 </div>
-
-                <!-- DIGIT PRECISION -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Jumlah Digit Koma (Decimal)</label>
-                    <select id="decimalPlaces" onchange="saveAndCalculate()" class="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold cursor-pointer transition-all">
-                        <option value="0">0 (Contoh: 4531)</option>
-                        <option value="1">1 (Contoh: 4531.0)</option>
-                        <option value="2" selected>2 (Contoh: 4531.00)</option>
-                        <option value="3">3 (Contoh: 1950.123)</option>
-                        <option value="4">4 (Contoh: 1.1234)</option>
-                        <option value="5">5 (Contoh: 1.12345)</option>
-                    </select>
-                </div>
-
+    
             </div>
-
-            <!-- OUTPUT RESULTS SECTION -->
-            <div class="lg:col-span-5 flex flex-col justify-center space-y-4">
-                
-                <div class="bg-gray-50 dark:bg-gray-800/40 p-5 rounded-3xl border border-gray-200/80 dark:border-gray-700/60 space-y-3 shadow-inner">
-                    <h3 class="text-xs font-extrabold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">Hasil Eksekusi Order</h3>
-
-                    <!-- ENTRY RESULT -->
-                    <div class="flex justify-between items-center p-3.5 bg-white dark:bg-gray-800 rounded-2xl border-l-4 border-blue-500 shadow-sm border border-gray-100 dark:border-gray-700/80">
-                        <div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block">ENTRY EXECUTION</span>
-                            <span id="outEntry" class="font-mono font-black text-gray-900 dark:text-white text-lg md:text-xl">-</span>
-                        </div>
-                        <button onclick="copyToClipboard('outEntry', this)" class="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-bold transition-all cursor-pointer">Copy</button>
-                    </div>
-
-                    <!-- STOPLOSS RESULT -->
-                    <div class="flex justify-between items-center p-3.5 bg-white dark:bg-gray-800 rounded-2xl border-l-4 border-red-500 shadow-sm border border-gray-100 dark:border-gray-700/80">
-                        <div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 block">STOPLOSS</span>
-                            <span id="outSL" class="font-mono font-black text-red-600 dark:text-red-400 text-lg md:text-xl">-</span>
-                        </div>
-                        <button onclick="copyToClipboard('outSL', this)" class="px-3 py-1.5 text-xs bg-red-50 hover:bg-red-100 dark:bg-red-950/60 dark:hover:bg-red-900/80 text-red-600 dark:text-red-300 rounded-lg font-bold transition-all cursor-pointer">Copy</button>
-                    </div>
-
-                    <!-- TAKE PROFIT CUSTOM RESULT -->
-                    <div id="boxCustomTP" class="flex justify-between items-center p-3.5 bg-white dark:bg-gray-800 rounded-2xl border-l-4 border-green-500 shadow-sm border border-gray-100 dark:border-gray-700/80">
-                        <div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-green-600 dark:text-green-400 block">TAKE PROFIT (CUSTOM)</span>
-                            <span id="outCustomTP" class="font-mono font-black text-green-600 dark:text-green-400 text-lg md:text-xl">-</span>
-                        </div>
-                        <button onclick="copyToClipboard('outCustomTP', this)" class="px-3 py-1.5 text-xs bg-green-50 hover:bg-green-100 dark:bg-green-950/60 dark:hover:bg-green-900/80 text-green-600 dark:text-green-300 rounded-lg font-bold transition-all cursor-pointer">Copy</button>
-                    </div>
-
-                    <!-- REKOMENDASI RISK REWARD TAKE PROFIT -->
-                    <div class="pt-2">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block mb-2">Rekomendasi Take Profit (RR):</span>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center p-2.5 bg-white dark:bg-gray-800/90 rounded-xl border border-gray-100 dark:border-gray-700/60">
-                                <span class="text-xs font-bold text-gray-600 dark:text-gray-300">TP 1 (1:1)</span>
-                                <div class="flex items-center gap-2">
-                                    <span id="recTP1" class="font-mono font-bold text-green-600 dark:text-green-400 text-sm">-</span>
-                                    <button onclick="copyToClipboard('recTP1', this)" class="px-2 py-1 text-[10px] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded font-bold transition-all cursor-pointer">Copy</button>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center p-2.5 bg-white dark:bg-gray-800/90 rounded-xl border border-gray-100 dark:border-gray-700/60">
-                                <span class="text-xs font-bold text-gray-600 dark:text-gray-300">TP 2 (1:2)</span>
-                                <div class="flex items-center gap-2">
-                                    <span id="recTP2" class="font-mono font-bold text-green-600 dark:text-green-400 text-sm">-</span>
-                                    <button onclick="copyToClipboard('recTP2', this)" class="px-2 py-1 text-[10px] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded font-bold transition-all cursor-pointer">Copy</button>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center p-2.5 bg-white dark:bg-gray-800/90 rounded-xl border border-gray-100 dark:border-gray-700/60">
-                                <span class="text-xs font-bold text-gray-600 dark:text-gray-300">TP 3 (1:3)</span>
-                                <div class="flex items-center gap-2">
-                                    <span id="recTP3" class="font-mono font-bold text-green-600 dark:text-green-400 text-sm">-</span>
-                                    <button onclick="copyToClipboard('recTP3', this)" class="px-2 py-1 text-[10px] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded font-bold transition-all cursor-pointer">Copy</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
-    </div>
+    </main>
 
     <script>
         let currentDirection = 'BUY';
@@ -250,12 +299,12 @@
             const inactiveClass = "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
 
             if (slMode === 'POINTS') {
-                btnPoint.className = `px-2.5 py-1 rounded-md transition-all cursor-pointer ${activeClass}`;
-                btnPrice.className = `px-2.5 py-1 rounded-md transition-all cursor-pointer ${inactiveClass}`;
+                btnPoint.className = `px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer ${activeClass}`;
+                btnPrice.className = `px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer ${inactiveClass}`;
                 info.style.display = 'block';
             } else {
-                btnPrice.className = `px-2.5 py-1 rounded-md transition-all cursor-pointer ${activeClass}`;
-                btnPoint.className = `px-2.5 py-1 rounded-md transition-all cursor-pointer ${inactiveClass}`;
+                btnPrice.className = `px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer ${activeClass}`;
+                btnPoint.className = `px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer ${inactiveClass}`;
                 info.style.display = 'none';
             }
         }
@@ -275,12 +324,12 @@
             const inactiveClass = "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
 
             if (tpMode === 'POINTS') {
-                btnPoint.className = `px-2.5 py-1 rounded-md transition-all cursor-pointer ${activeClass}`;
-                btnPrice.className = `px-2.5 py-1 rounded-md transition-all cursor-pointer ${inactiveClass}`;
+                btnPoint.className = `px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer ${activeClass}`;
+                btnPrice.className = `px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer ${inactiveClass}`;
                 info.style.display = 'block';
             } else {
-                btnPrice.className = `px-2.5 py-1 rounded-md transition-all cursor-pointer ${activeClass}`;
-                btnPoint.className = `px-2.5 py-1 rounded-md transition-all cursor-pointer ${inactiveClass}`;
+                btnPrice.className = `px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer ${activeClass}`;
+                btnPoint.className = `px-2 sm:px-2.5 py-1 rounded-md transition-all cursor-pointer ${inactiveClass}`;
                 info.style.display = 'none';
             }
         }
@@ -291,11 +340,11 @@
             const btnSell = document.getElementById('btnSell');
 
             if (direction === 'BUY') {
-                btnBuy.className = "py-3 rounded-xl font-bold text-center border-2 border-green-500 bg-green-500 text-white shadow-lg shadow-green-500/20 cursor-pointer transition-all";
-                btnSell.className = "py-3 rounded-xl font-bold text-center border-2 border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 cursor-pointer transition-all";
+                btnBuy.className = "py-2.5 sm:py-3 rounded-xl font-bold text-center border-2 border-green-500 bg-green-500 text-white shadow-lg shadow-green-500/20 cursor-pointer transition-all text-xs sm:text-sm";
+                btnSell.className = "py-2.5 sm:py-3 rounded-xl font-bold text-center border-2 border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 cursor-pointer transition-all text-xs sm:text-sm";
             } else {
-                btnSell.className = "py-3 rounded-xl font-bold text-center border-2 border-red-500 bg-red-500 text-white shadow-lg shadow-red-500/20 cursor-pointer transition-all";
-                btnBuy.className = "py-3 rounded-xl font-bold text-center border-2 border-green-500/30 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/30 cursor-pointer transition-all";
+                btnSell.className = "py-2.5 sm:py-3 rounded-xl font-bold text-center border-2 border-red-500 bg-red-500 text-white shadow-lg shadow-red-500/20 cursor-pointer transition-all text-xs sm:text-sm";
+                btnBuy.className = "py-2.5 sm:py-3 rounded-xl font-bold text-center border-2 border-green-500/30 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/30 cursor-pointer transition-all text-xs sm:text-sm";
             }
             
             if (triggerSave) saveAndCalculate();
