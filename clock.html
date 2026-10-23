@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+ <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Clock - Trading Suite</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+ <script>try { document.documentElement.classList.toggle('dark', (localStorage.getItem('trading_theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark'); } catch { document.documentElement.classList.toggle('dark', matchMedia('(prefers-color-scheme: dark)').matches); }</script>
+ <script src="https://cdn.tailwindcss.com"></script><script>tailwind.config = { darkMode:'class' };</script>
+ <style>
+html,body { max-width:100%; overflow-x:hidden; }
+body { font-family:'Poppins',sans-serif; }
+.no-scrollbar { scrollbar-width:none; } .no-scrollbar::-webkit-scrollbar { display:none; }
+[hidden] { display:none!important; }
+.time-panel { width:100%; max-width:48rem; background:#fff; border:1px solid #e5e7eb; border-radius:1.5rem; padding:clamp(1rem,3vw,2rem); box-shadow:0 20px 25px -5px rgb(0 0 0 / .1); }
+.dark .time-panel { background:#111827; border-color:#1f2937; }
+.time-title { font-size:clamp(1.15rem,3vw,1.5rem); font-weight:800; color:#2563eb; }
+.dark .time-title { color:#60a5fa; }
+.subtle { color:#6b7280; font-size:.75rem; line-height:1.7; }
+.dark .subtle { color:#9ca3af; }
+.form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+.full { grid-column:1/-1; }
+.field label, .field-label { display:block; font-size:.75rem; font-weight:700; margin-bottom:.4rem; }
+.control { width:100%; min-width:0; border:1px solid #d1d5db; border-radius:.75rem; background:#f9fafb; color:#111827; padding:.65rem .8rem; min-height:44px; font-size:.875rem; }
+.dark .control { background:#1f2937; border-color:#374151; color:#fff; color-scheme:dark; }
+.control:focus-visible,button:focus-visible,a:focus-visible,input[type=checkbox]:focus-visible { outline:3px solid #3b82f6; outline-offset:3px; }
+.control:disabled { opacity:.65; }
+.inline-fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:.65rem; }
+.check-row { display:flex; align-items:center; gap:.65rem; font-size:.875rem; font-weight:600; min-height:44px; }
+.check-row input { width:1.1rem; height:1.1rem; accent-color:#2563eb; }
+.help { margin-top:.35rem; min-height:1.1em; font-size:.7rem; color:#6b7280; }
+.dark .help { color:#9ca3af; }
+.actions { display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.25rem; }
+.time-button { min-height:44px; padding:.65rem 1rem; border-radius:.75rem; font-weight:700; font-size:.8rem; cursor:pointer; border:1px solid transparent; }
+.primary { background:#2563eb; color:#fff; } .primary:hover { background:#1d4ed8; }
+.secondary { background:#f3f4f6; color:#374151; border-color:#d1d5db; } .dark .secondary { background:#1f2937; color:#e5e7eb; border-color:#374151; }
+.danger { background:#dc2626; color:#fff; } .danger:hover { background:#b91c1c; }
+button:disabled { opacity:.45; cursor:not-allowed; }
+.time-display { margin-top:1.5rem; padding:1.5rem .75rem; text-align:center; border:1px solid #e5e7eb; background:#f9fafb; border-radius:1rem; }
+.dark .time-display { background:#1f2937; border-color:#374151; }
+.digits { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-variant-numeric:tabular-nums; font-weight:800; font-size:clamp(2.2rem,9vw,4.5rem); line-height:1.2; letter-spacing:-.04em; }
+.clock-digits { font-size:clamp(2.5rem,11vw,6rem); }
+.error { color:#dc2626; font-size:.8rem; line-height:1.6; margin-top:.75rem; } .error:empty { display:none; } .dark .error { color:#fca5a5; }
+.alarm-banner { margin-top:1rem; border:1px solid #f59e0b; background:#fffbeb; color:#92400e; border-radius:.75rem; padding:.8rem; font-size:.8rem; font-weight:600; } .dark .alarm-banner { background:#451a03; color:#fde68a; }
+.time-meta { margin-top:1rem; display:grid; grid-template-columns:1fr 1fr; gap:.75rem; font-size:.75rem; }
+.time-meta strong { display:block; margin-top:.25rem; font-size:.85rem; }
+@media(max-width:480px) { .form-grid { grid-template-columns:1fr; } .time-meta { grid-template-columns:1fr; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-300">
+<nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300 shadow-sm">
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-2">
+                
+                <!-- BRAND / TITLE -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="text-xl">📈</span>
+                    <span class="font-extrabold text-base sm:text-lg text-blue-600 dark:text-blue-400 tracking-tight hidden md:inline">Trading Suite</span>
+                </div>
+
+                <!-- NAVIGASI TAB MODUL (SCROLLABLE ON MOBILE) -->
+                <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl text-xs font-bold overflow-x-auto no-scrollbar min-w-0 flex-1 max-w-[calc(100vw-110px)] md:max-w-none">
+                    <a href="/Kalkulator_Project/" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        🧮 Kalkulator
+                    </a>
+                    <a href="/Kalkulator_Project/trading_spread_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        📊 Spread & RR
+                    </a>
+                    <a href="/Kalkulator_Project/rules_sl_candle_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        🚀 SL Rules
+                    </a>
+                    <a href="/Kalkulator_Project/cross_lev_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        ⚡ Position Size
+                    </a>
+                                    <a href="/Kalkulator_Project/interval_time.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">⏱ Interval Time</a>
+                    <a href="/Kalkulator_Project/clock.html" aria-current="page" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap bg-blue-600 dark:bg-blue-500 text-white shadow-sm">🕒 Clock</a>
+                </div>
+
+                <!-- TOGGLE DARK MODE -->
+                <button id="btnTheme" type="button" aria-label="Ubah tema" class="shrink-0 p-2 sm:p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 cursor-pointer transition-all text-xs font-semibold flex items-center gap-1.5 border border-gray-200 dark:border-gray-700">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText" class="hidden lg:inline">Dark</span>
+                </button>
+
+            </div>
+        </div>
+    </nav>
+<main class="flex-1 w-full flex items-center justify-center p-3 sm:p-6 md:p-8"><section class="time-panel" aria-label="Clock">
+<header class="border-b border-gray-100 dark:border-gray-800 pb-4 mb-5"><h1 class="time-title">Clock</h1><p class="subtle mt-1">Lihat waktu di zona UTC pilihanmu.</p></header>
+<div class="field"><label for="clockZone">Zona waktu</label><select id="clockZone" class="control"></select><p class="help">UTC offset tetap, tanpa perubahan waktu musim panas.</p></div>
+<div class="time-display py-10 sm:py-14"><p id="clockZoneLabel" class="text-sm font-bold text-blue-600 dark:text-blue-400">UTC+07:00</p><div id="clockTime" class="digits clock-digits mt-4" role="timer" aria-live="off">--:--:--</div><p id="clockDate" class="subtle mt-3"></p></div>
+<p class="subtle mt-5 text-center">Mengikuti jam perangkatmu. Pilihan zona disimpan khusus untuk Clock.</p>
+</section></main>
+<script src="time_utils.js"></script><script src="time_common.js"></script><script src="clock.js"></script>
+</body></html>

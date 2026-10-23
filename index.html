@@ -18,20 +18,13 @@
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        oled: '#000000',
-                    }
-                }
-            }
         }
     </script>
 
     <!-- Theme State Initializer (No Flash) -->
     <script>
         (function() {
-            const saved = localStorage.getItem('trading_theme') || localStorage.getItem('modecolor');
+            const saved = localStorage.getItem('trading_theme') || localStorage.getItem('modecolor') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             if (saved === 'light') {
                 document.documentElement.classList.remove('dark');
                 localStorage.setItem('modecolor', 'light');
@@ -111,8 +104,8 @@
             transition: all 0.2s;
         }
         .dark #list_riwayat li {
-            background-color: #121212;
-            border-color: #262626;
+            background-color: #1f2937;
+            border-color: #374151;
         }
         #list_riwayat li h4 {
             font-size: 0.8125rem;
@@ -160,10 +153,10 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-black text-gray-900 dark:text-white transition-colors duration-300 min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
+<body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
 
     <!-- NAVBAR RESPONSIF -->
-    <nav class="bg-white dark:bg-neutral-950 border-b border-gray-200 dark:border-neutral-800 sticky top-0 z-50 transition-colors duration-300 shadow-sm w-full">
+    <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300 shadow-sm w-full">
         <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 gap-2">
                 
@@ -174,8 +167,8 @@
                 </div>
 
                 <!-- NAVIGASI TAB MODUL (SCROLLABLE ON MOBILE) -->
-                <div class="flex items-center gap-1 bg-gray-100 dark:bg-neutral-900 p-1 rounded-xl text-xs font-bold overflow-x-auto no-scrollbar max-w-[calc(100vw-145px)] md:max-w-none">
-                    <a href="/Kalkulator_Project/" class="px-2.5 sm:px-3.5 bg-blue-600 dark:bg-blue-500 text-white py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap shadow-sm">
+                <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl text-xs font-bold overflow-x-auto no-scrollbar min-w-0 flex-1 max-w-[calc(100vw-145px)] md:max-w-none">
+                    <a href="/Kalkulator_Project/" aria-current="page" class="px-2.5 sm:px-3.5 bg-blue-600 dark:bg-blue-500 text-white py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap shadow-sm">
                         🧮 Kalkulator
                     </a>
                     <a href="/Kalkulator_Project/trading_spread_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
@@ -187,18 +180,20 @@
                     <a href="/Kalkulator_Project/cross_lev_calculator.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                         ⚡ Position Size
                     </a>
+                                    <a href="/Kalkulator_Project/interval_time.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">⏱ Interval Time</a>
+                    <a href="/Kalkulator_Project/clock.html" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">🕒 Clock</a>
                 </div>
 
                 <!-- ACTIONS: RIWAYAT & DARK MODE -->
                 <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                     <!-- BUTTON RIWAYAT -->
-                    <button id="riwayat" type="button" class="shrink-0 p-2 sm:px-3 sm:py-2.5 rounded-xl bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-200 cursor-pointer transition-all text-xs font-semibold flex items-center gap-1.5 border border-gray-200 dark:border-neutral-800" title="Buka Riwayat Perhitungan">
+                    <button id="riwayat" type="button" class="shrink-0 p-2 sm:px-3 sm:py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 cursor-pointer transition-all text-xs font-semibold flex items-center gap-1.5 border border-gray-200 dark:border-gray-700" title="Buka Riwayat Perhitungan">
                         <i class="bi bi-clock-history text-sm text-blue-600 dark:text-blue-400"></i>
                         <span class="hidden sm:inline">Riwayat</span>
                     </button>
 
                     <!-- TOGGLE DARK MODE -->
-                    <button onclick="toggleDarkMode()" id="btnTheme" type="button" class="shrink-0 p-2 sm:p-2.5 rounded-xl bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-200 cursor-pointer transition-all text-xs font-semibold flex items-center gap-1.5 border border-gray-200 dark:border-neutral-800" title="Toggle Tema">
+                    <button onclick="toggleDarkMode()" id="btnTheme" type="button" class="shrink-0 p-2 sm:p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 cursor-pointer transition-all text-xs font-semibold flex items-center gap-1.5 border border-gray-200 dark:border-gray-700" title="Toggle Tema">
                         <span id="themeIcon">🌙</span>
                         <span id="themeText" class="hidden lg:inline">Dark</span>
                     </button>
@@ -216,10 +211,10 @@
 
     <!-- MAIN CALCULATOR WRAPPER -->
     <main class="flex-1 w-full max-w-full overflow-x-hidden flex items-center justify-center p-2.5 sm:p-5 md:p-8">
-        <div class="bg-white dark:bg-neutral-950 p-3.5 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl border border-gray-200/80 dark:border-neutral-800 w-full max-w-4xl transition-colors duration-300">
+        <div class="bg-white dark:bg-gray-900 p-3.5 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl border border-gray-200/80 dark:border-gray-800 w-full max-w-4xl transition-colors duration-300">
             
             <!-- CALCULATOR CARD HEADER -->
-            <div class="border-b border-gray-100 dark:border-neutral-800 pb-3 mb-3.5 sm:mb-4 flex items-center justify-between">
+            <div class="border-b border-gray-100 dark:border-gray-700 pb-3 mb-3.5 sm:mb-4 flex items-center justify-between">
                 <div>
                     <h1 class="text-base sm:text-xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tight flex items-center gap-2">
                         🧮 Kalkulator Saintifik
@@ -229,7 +224,7 @@
             </div>
 
             <!-- CALCULATOR DISPLAY SCREEN -->
-            <div class="rounded-2xl bg-gray-50 dark:bg-black border border-gray-200 dark:border-neutral-800 p-3 sm:p-4 mb-3 sm:mb-5 shadow-inner transition-colors">
+            <div class="rounded-2xl bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 p-3 sm:p-4 mb-3 sm:mb-5 shadow-inner transition-colors">
                 <!-- Expression Input -->
                 <div class="text w-full min-h-[44px] sm:min-h-[56px] flex items-center justify-end">
                     <input type="text" id="calc-input" autofocus autocomplete="off" 
@@ -237,7 +232,7 @@
                         placeholder="0" />
                 </div>
                 <!-- Result Output -->
-                <div class="output w-full pt-1.5 flex items-center justify-end border-t border-gray-200/70 dark:border-neutral-800/80">
+                <div class="output w-full pt-1.5 flex items-center justify-end border-t border-gray-200/70 dark:border-gray-700/80">
                     <input type="text" value="0" disabled 
                         class="w-full text-right bg-transparent border-none outline-none font-bold text-lg sm:text-xl md:text-2xl text-blue-600 dark:text-blue-400" />
                 </div>
@@ -248,63 +243,63 @@
                 <div class="input grid grid-cols-8 gap-1 sm:gap-2 min-w-[320px] sm:min-w-0 select-none">
                     
                     <!-- ROW 1 -->
-                    <button class="input-item second-toggle py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">2nd</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">(</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">)</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">10ˣ</button>
-                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-neutral-950 text-gray-400 dark:text-neutral-600 border border-gray-100 dark:border-neutral-900" disabled>mc</button>
-                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-neutral-950 text-gray-400 dark:text-neutral-600 border border-gray-100 dark:border-neutral-900" disabled>m+</button>
-                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-neutral-950 text-gray-400 dark:text-neutral-600 border border-gray-100 dark:border-neutral-900" disabled>m-</button>
-                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-neutral-950 text-gray-400 dark:text-neutral-600 border border-gray-100 dark:border-neutral-900" disabled>mr</button>
+                    <button class="input-item second-toggle py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">2nd</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">(</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">)</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">10ˣ</button>
+                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 border border-gray-100 dark:border-gray-800" disabled>mc</button>
+                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 border border-gray-100 dark:border-gray-800" disabled>m+</button>
+                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 border border-gray-100 dark:border-gray-800" disabled>m-</button>
+                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 border border-gray-100 dark:border-gray-800" disabled>mr</button>
 
                     <!-- ROW 2 -->
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">1/x</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">x²</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">x³</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">yˣ</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">1/x</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">x²</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">x³</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">yˣ</button>
                     <button class="input-item hapus-semua py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200/80 dark:border-red-900/50 active:scale-95 transition-all cursor-pointer">AC</button>
                     <button class="input-item hapus-satu py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-600 dark:text-amber-400 border border-amber-200/80 dark:border-amber-900/50 active:scale-95 transition-all cursor-pointer"><i class="bi bi-arrow-left"></i></button>
-                    <button class="input-item balik py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">+/-</button>
+                    <button class="input-item balik py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">+/-</button>
                     <button class="input-item operator blue-text py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-900/50 active:scale-95 transition-all cursor-pointer">÷</button>
 
                     <!-- ROW 3 -->
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">x!</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">2√(y)</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">x√(y)</button>
-                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-neutral-950 text-gray-400 dark:text-neutral-600 border border-gray-100 dark:border-neutral-900" disabled>lg</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">7</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">8</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">9</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">x!</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">2√(y)</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">x√(y)</button>
+                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 border border-gray-100 dark:border-gray-800" disabled>lg</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">7</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">8</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">9</button>
                     <button class="input-item operator blue-text py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-900/50 active:scale-95 transition-all cursor-pointer">×</button>
 
                     <!-- ROW 4 -->
-                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">sin</button>
-                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">cos</button>
-                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">tan</button>
-                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-neutral-950 text-gray-400 dark:text-neutral-600 border border-gray-100 dark:border-neutral-900" disabled>ln</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">4</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">5</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">6</button>
+                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">sin</button>
+                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">cos</button>
+                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">tan</button>
+                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 border border-gray-100 dark:border-gray-800" disabled>ln</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">4</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">5</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">6</button>
                     <button class="input-item operator blue-text py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-900/50 active:scale-95 transition-all cursor-pointer">-</button>
 
                     <!-- ROW 5 -->
-                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">sinh</button>
-                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">cosh</button>
-                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">tanh</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">eˣ</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">1</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">2</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">3</button>
+                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">sinh</button>
+                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">cosh</button>
+                    <button class="input-item operator second py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">tanh</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">eˣ</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">1</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">2</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">3</button>
                     <button class="input-item operator blue-text py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-900/50 active:scale-95 transition-all cursor-pointer">+</button>
 
                     <!-- ROW 6 -->
-                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-neutral-950 text-gray-400 dark:text-neutral-600 border border-gray-100 dark:border-neutral-900" disabled>Rad</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">π</button>
-                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-neutral-950 text-gray-400 dark:text-neutral-600 border border-gray-100 dark:border-neutral-900" disabled>EE</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">Rand</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">%</button>
-                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-800 active:scale-95 shadow-sm transition-all cursor-pointer">0</button>
-                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-neutral-800 active:scale-95 transition-all cursor-pointer">,</button>
+                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 border border-gray-100 dark:border-gray-800" disabled>Rad</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">π</button>
+                    <button class="input-item py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 border border-gray-100 dark:border-gray-800" disabled>EE</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">Rand</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">%</button>
+                    <button class="input-item angka py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 active:scale-95 shadow-sm transition-all cursor-pointer">0</button>
+                    <button class="input-item operator py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 active:scale-95 transition-all cursor-pointer">,</button>
                     <button class="input-item operator blue-text py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-600 dark:hover:bg-blue-500 border border-blue-500 shadow-md shadow-blue-500/20 active:scale-95 transition-all cursor-pointer">=</button>
 
                 </div>
@@ -317,14 +312,14 @@
     <div class="bg-blur"></div>
 
     <!-- RIWAYAT DRAWER -->
-    <div id="riwayat_content" class="bg-white dark:bg-neutral-950 border-l border-gray-200 dark:border-neutral-800 shadow-2xl p-5 sm:p-6 transition-colors duration-300">
-        <div class="riwayat-header border-b border-gray-100 dark:border-neutral-800 pb-4">
+    <div id="riwayat_content" class="bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 shadow-2xl p-5 sm:p-6 transition-colors duration-300">
+        <div class="riwayat-header border-b border-gray-100 dark:border-gray-700 pb-4">
             <div class="title flex items-center justify-between mb-2">
                 <h2 class="text-base sm:text-lg font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
                     <i class="bi bi-clock-history text-blue-600 dark:text-blue-400"></i>
                     Riwayat Perhitungan
                 </h2>
-                <button id="close_riwayat" type="button" class="p-2 rounded-xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all cursor-pointer" title="Tutup">
+                <button id="close_riwayat" type="button" class="p-2 rounded-xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-all cursor-pointer" title="Tutup">
                     <i class="bi bi-x-lg text-base"></i>
                 </button>
             </div>
