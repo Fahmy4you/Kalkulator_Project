@@ -16,6 +16,7 @@
     } catch { /* Ignore corrupt saved preferences. */ }
     let audio;
     let masterGain;
+    let alarmLimiter;
     const volumeInput = el('alarmVolume');
     const storedVolume = UI.read('tr_interval_volume');
     const savedVolume = storedVolume === null ? 100 : Number(storedVolume);
@@ -47,6 +48,15 @@
             masterGain = audio.createGain();
             masterGain.gain.value = (Number(volumeInput.value) / 100) ** 2;
             masterGain.connect(audio.destination);
+            // Keep the louder alarm signal bounded before the user's volume control.
+            alarmLimiter = audio.createWaveShaper();
+            const curve = new Float32Array(4096);
+            for (let i = 0; i < curve.length; i++) {
+                const x = i * 2 / (curve.length - 1) - 1;
+                curve[i] = 0.98 * Math.tanh(2.5 * x);
+            }
+            alarmLimiter.curve = curve;
+            alarmLimiter.connect(masterGain);
         }
         if (audio.state !== 'running') await audio.resume();
         if (audio.state !== 'running') throw new Error('Bunyi belum diizinkan. Tekan Tes Bunyi lalu coba Start kembali.');
@@ -58,17 +68,18 @@
         }
         stopVoices();
         const start = audio.currentTime;
-        [0, 0.4, 0.8].forEach((delay, i) => {
+        [0, 0.58, 1.16].forEach((delay, i) => {
             const gain = audio.createGain();
-            gain.connect(masterGain);
+            gain.connect(alarmLimiter);
             gain.gain.setValueAtTime(0, start);
             const oscillator = audio.createOscillator();
-            oscillator.type = 'triangle';
-            oscillator.frequency.value = i === 1 ? 1046.5 : 880;
+            oscillator.type = 'square';
+            oscillator.frequency.value = i === 1 ? 1500 : 1100;
             oscillator.connect(gain);
             gain.gain.setValueAtTime(0, start + delay);
-            gain.gain.linearRampToValueAtTime(0.85, start + delay + 0.015);
-            gain.gain.linearRampToValueAtTime(0, start + delay + 0.3);
+            gain.gain.linearRampToValueAtTime(0.95, start + delay + 0.01);
+            gain.gain.setValueAtTime(0.95, start + delay + 0.44);
+            gain.gain.linearRampToValueAtTime(0, start + delay + 0.47);
             oscillator.onended = () => {
                 oscillator.disconnect();
                 voices = voices.filter(v => v !== oscillator);
@@ -76,7 +87,7 @@
             };
             voices.push(oscillator);
             oscillator.start(start + delay);
-            oscillator.stop(start + delay + 0.31);
+            oscillator.stop(start + delay + 0.48);
         });
     }
     const engine = new T.CandleAlarm(event => {
@@ -200,7 +211,7 @@
         if (document.hidden) clearTimeout(displayTimer);
         else { if (engine.running) { engine.wake(Date.now()); schedule(); } displayLoop(); }
     });
-    window.addEventListener('pagehide', () => { stop(); if (audio) { audio.close().catch(() => {}); audio = null; masterGain = null; } });
+    window.addEventListener('pagehide', () => { stop(); if (audio) { audio.close().catch(() => {}); audio = null; masterGain = null; alarmLimiter = null; } });
     window.addEventListener('pageshow', render);
     updateForm();
 })();
