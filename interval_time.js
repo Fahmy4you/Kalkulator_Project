@@ -15,6 +15,20 @@
         });
     } catch { /* Ignore corrupt saved preferences. */ }
     let audio;
+    let masterGain;
+    const volumeInput = el('alarmVolume');
+    const storedVolume = UI.read('tr_interval_volume');
+    const savedVolume = storedVolume === null ? 100 : Number(storedVolume);
+    volumeInput.value = String(Number.isFinite(savedVolume) ? Math.min(100, Math.max(0, Math.round(savedVolume))) : 100);
+    function updateVolume() {
+        const percent = Number(volumeInput.value);
+        el('volumeValue').textContent = `${percent}%`;
+        volumeInput.setAttribute('aria-valuetext', percent === 0 ? 'Bisu' : `${percent} persen`);
+        if (masterGain && audio) masterGain.gain.setTargetAtTime((percent / 100) ** 2, audio.currentTime, 0.02);
+        UI.write('tr_interval_volume', String(percent));
+    }
+    volumeInput.addEventListener('input', updateVolume);
+    updateVolume();
     let voices = [];
     let deadlineTimer;
     let displayTimer;
@@ -28,7 +42,12 @@
     async function unlockAudio() {
         const Audio = window.AudioContext || window.webkitAudioContext;
         if (!Audio) throw new Error('Browser ini tidak mendukung bunyi alarm. Gunakan browser terbaru.');
-        if (!audio || audio.state === 'closed') audio = new Audio();
+        if (!audio || audio.state === 'closed') {
+            audio = new Audio();
+            masterGain = audio.createGain();
+            masterGain.gain.value = (Number(volumeInput.value) / 100) ** 2;
+            masterGain.connect(audio.destination);
+        }
         if (audio.state !== 'running') await audio.resume();
         if (audio.state !== 'running') throw new Error('Bunyi belum diizinkan. Tekan Tes Bunyi lalu coba Start kembali.');
     }
@@ -39,17 +58,17 @@
         }
         stopVoices();
         const start = audio.currentTime;
-        [0, 0.25, 0.5].forEach((delay, i) => {
+        [0, 0.4, 0.8].forEach((delay, i) => {
             const gain = audio.createGain();
-            gain.connect(audio.destination);
+            gain.connect(masterGain);
             gain.gain.setValueAtTime(0, start);
             const oscillator = audio.createOscillator();
-            oscillator.type = 'sine';
+            oscillator.type = 'triangle';
             oscillator.frequency.value = i === 1 ? 1046.5 : 880;
             oscillator.connect(gain);
             gain.gain.setValueAtTime(0, start + delay);
-            gain.gain.linearRampToValueAtTime(0.16, start + delay + 0.015);
-            gain.gain.linearRampToValueAtTime(0, start + delay + 0.19);
+            gain.gain.linearRampToValueAtTime(0.85, start + delay + 0.015);
+            gain.gain.linearRampToValueAtTime(0, start + delay + 0.3);
             oscillator.onended = () => {
                 oscillator.disconnect();
                 voices = voices.filter(v => v !== oscillator);
@@ -57,7 +76,7 @@
             };
             voices.push(oscillator);
             oscillator.start(start + delay);
-            oscillator.stop(start + delay + 0.2);
+            oscillator.stop(start + delay + 0.31);
         });
     }
     const engine = new T.CandleAlarm(event => {
@@ -181,7 +200,7 @@
         if (document.hidden) clearTimeout(displayTimer);
         else { if (engine.running) { engine.wake(Date.now()); schedule(); } displayLoop(); }
     });
-    window.addEventListener('pagehide', () => { stop(); if (audio) { audio.close().catch(() => {}); audio = null; } });
+    window.addEventListener('pagehide', () => { stop(); if (audio) { audio.close().catch(() => {}); audio = null; masterGain = null; } });
     window.addEventListener('pageshow', render);
     updateForm();
 })();

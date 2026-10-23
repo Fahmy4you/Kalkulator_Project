@@ -23,7 +23,7 @@ body { font-family:'Poppins',sans-serif; }
 .field label, .field-label { display:block; font-size:.75rem; font-weight:700; margin-bottom:.4rem; }
 .control { width:100%; min-width:0; border:1px solid #d1d5db; border-radius:.75rem; background:#f9fafb; color:#111827; padding:.65rem .8rem; min-height:44px; font-size:.875rem; }
 .dark .control { background:#1f2937; border-color:#374151; color:#fff; color-scheme:dark; }
-.control:focus-visible,button:focus-visible,a:focus-visible,input[type=checkbox]:focus-visible { outline:3px solid #3b82f6; outline-offset:3px; }
+a:focus-visible { outline:3px solid #3b82f6; outline-offset:3px; }
 .control:disabled { opacity:.65; }
 .inline-fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:.65rem; }
 .check-row { display:flex; align-items:center; gap:.65rem; font-size:.875rem; font-weight:600; min-height:44px; }
@@ -46,7 +46,16 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .time-meta strong { display:block; margin-top:.25rem; font-size:.85rem; }
 @media(max-width:480px) { .form-grid { grid-template-columns:1fr; } .time-meta { grid-template-columns:1fr; } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; scroll-behavior:auto!important; } }
-</style>
+
+        /* Keep controls free of focus outlines and Tailwind focus rings. */
+        input:focus, select:focus, button:focus {
+            outline: none !important;
+            --tw-ring-shadow: 0 0 #0000 !important;
+            --tw-ring-offset-shadow: 0 0 #0000 !important;
+        }
+        input:focus-visible, select:focus-visible, button:focus-visible { filter: brightness(.93); }
+        .dark input:focus-visible, .dark select:focus-visible, .dark button:focus-visible { filter: brightness(1.15); }
+    </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-300">
 <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300 shadow-sm">
@@ -101,6 +110,11 @@ button:disabled { opacity:.45; cursor:not-allowed; }
   <div class="field"><label for="soundMode">Mode bunyi</label><select id="soundMode" class="control"><option value="once">Sekali per kejadian</option><option value="repeat">Berulang sampai dihentikan</option></select></div>
   <div id="repeatFields" class="field" hidden><label for="repeatSeconds">Jarak bunyi (detik)</label><input id="repeatSeconds" class="control" type="number" min="10" max="30" step="1" value="15"><p class="help">Pilih 10–30 detik.</p></div>
  </fieldset>
+ <div class="field mt-5">
+  <label for="alarmVolume">Volume alarm <output id="volumeValue" for="alarmVolume">100%</output></label>
+  <input id="alarmVolume" class="w-full accent-blue-600 cursor-pointer" style="min-height:32px" type="range" min="0" max="100" step="1" value="100" aria-describedby="volumeHelp">
+  <p id="volumeHelp" class="help">Bisa diubah saat alarm aktif. Gunakan Tes Bunyi untuk mengecek volume.</p>
+ </div>
  <div class="actions"><button id="startButton" class="time-button primary" type="submit">Start</button><button id="stopButton" class="time-button danger" type="button" disabled>Stop</button><button id="testSound" class="time-button secondary" type="button">Tes Bunyi</button></div>
  <p id="formError" class="error" role="alert"></p>
 </form>

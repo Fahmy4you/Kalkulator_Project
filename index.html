@@ -151,6 +151,15 @@
             color: #ffffff !important;
             border-color: #2563eb !important;
         }
+    
+        /* Keep controls free of focus outlines and Tailwind focus rings. */
+        input:focus, select:focus, button:focus {
+            outline: none !important;
+            --tw-ring-shadow: 0 0 #0000 !important;
+            --tw-ring-offset-shadow: 0 0 #0000 !important;
+        }
+        input:focus-visible, select:focus-visible, button:focus-visible { filter: brightness(.93); }
+        .dark input:focus-visible, .dark select:focus-visible, .dark button:focus-visible { filter: brightness(1.15); }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
