@@ -55,12 +55,35 @@ button:disabled { opacity:.45; cursor:not-allowed; }
         }
         input:focus-visible, select:focus-visible, button:focus-visible { filter: brightness(.93); }
         .dark input:focus-visible, .dark select:focus-visible, .dark button:focus-visible { filter: brightness(1.15); }
+    
+        /* Balanced navigation: centered links, equal inner padding, compact mobile scroll. */
+        .suite-nav-layout {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            align-items: center;
+            gap: .75rem;
+        }
+        .suite-nav-tabs {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            justify-content: safe center;
+            padding: .25rem;
+            scroll-padding-inline: .25rem;
+        }
+        .suite-nav-tabs > a { flex: 0 0 auto; }
+        .suite-nav-layout > :first-child { justify-self: start; }
+        .suite-nav-layout > :last-child { justify-self: end; }
+        @media (min-width: 1280px) {
+            .suite-nav-layout { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 1rem; }
+            .suite-nav-tabs { width: max-content; }
+        }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-300">
 <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300 shadow-sm">
-        <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 gap-2">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="suite-nav-layout h-16">
                 
                 <!-- BRAND / TITLE -->
                 <div class="flex items-center gap-2 shrink-0">
@@ -69,7 +92,7 @@ button:disabled { opacity:.45; cursor:not-allowed; }
                 </div>
 
                 <!-- NAVIGASI TAB MODUL (SCROLLABLE ON MOBILE) -->
-                <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl text-xs font-bold overflow-x-auto no-scrollbar min-w-0 flex-1 max-w-[calc(100vw-110px)] md:max-w-none">
+                <div class="suite-nav-tabs flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-xl text-xs font-bold overflow-x-auto no-scrollbar">
                     <a href="/Kalkulator_Project/" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                         🧮 Kalkulator
                     </a>
